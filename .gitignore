@@ -101,3 +101,7 @@ temp_repo/
 # Old project files
 figures/
 src/
+
+# Paper writing (local only, not for publication)
+paper_text_samples.md
+paper_manuscript_template.md

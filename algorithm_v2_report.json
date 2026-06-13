@@ -757,36 +757,36 @@
     }
   ],
   "queue_delay_analysis": {
-    "capacity_per_sat": 8.707115103580955,
+    "capacity_per_sat": 100.0,
     "model": "M/M/1 approximation with overflow penalty",
     "metrics": {
       "Greedy": {
-        "n_overloaded": 20,
-        "overload_fraction": 1.0,
+        "n_overloaded": 1,
+        "overload_fraction": 0.05,
         "avg_propagation_delay_ms": 1.5462650247672294,
-        "avg_queue_delay_ms": null,
-        "avg_total_delay_ms": 1.5462650247672294
+        "avg_queue_delay_ms": 142.07953889529279,
+        "avg_total_delay_ms": 143.62580392006
       },
       "Nearest-3": {
-        "n_overloaded": 55,
-        "overload_fraction": 1.0,
+        "n_overloaded": 0,
+        "overload_fraction": 0.0,
         "avg_propagation_delay_ms": 1.9300357537344226,
-        "avg_queue_delay_ms": null,
-        "avg_total_delay_ms": 1.9300357537344226
+        "avg_queue_delay_ms": 3.9492355228924327,
+        "avg_total_delay_ms": 5.879271276626856
       },
       "CBDP v2": {
-        "n_overloaded": 53,
-        "overload_fraction": 0.9137931034482759,
+        "n_overloaded": 0,
+        "overload_fraction": 0.0,
         "avg_propagation_delay_ms": 2.662515374534916,
-        "avg_queue_delay_ms": 476.35084933781746,
-        "avg_total_delay_ms": 479.01336471235237
+        "avg_queue_delay_ms": 9.177979773554359,
+        "avg_total_delay_ms": 11.840495148089275
       },
       "CBDP v3": {
-        "n_overloaded": 69,
-        "overload_fraction": 0.8414634146341463,
+        "n_overloaded": 0,
+        "overload_fraction": 0.0,
         "avg_propagation_delay_ms": 2.793792216925063,
-        "avg_queue_delay_ms": 2721.2591948142726,
-        "avg_total_delay_ms": 2724.0529870311975
+        "avg_queue_delay_ms": 2.35774189081442,
+        "avg_total_delay_ms": 5.151534107739483
       }
     }
   },
@@ -822,20 +822,20 @@
       "description": "k nearest satellites with ECMP splitting"
     },
     "CBDP v2": {
-      "time": "O(grid³ + N + M * n_cores)",
-      "space": "O(grid³)",
+      "time": "O(grid^3 + N + M * n_cores)",
+      "space": "O(grid^3)",
       "communication_overhead": "O(n_cores * k_neighbors) per update",
       "description": "φ-field density + Gaussian smoothing + maximum_filter + routing"
     },
     "CBDP v3": {
-      "time": "O(grid³ + N + M * n_cores * k_cores)",
-      "space": "O(grid³)",
+      "time": "O(grid^3 + N + M * n_cores * k_cores)",
+      "space": "O(grid^3)",
       "communication_overhead": "O(n_cores * k_neighbors) per update",
       "description": "v2 + grid search over (alpha, k_cores) + demand-weighted φ"
     },
     "PDE Direct": {
-      "time": "O(grid³ + N + M * n_cores)",
-      "space": "O(grid³)",
+      "time": "O(grid^3 + N + M * n_cores)",
+      "space": "O(grid^3)",
       "communication_overhead": "0 (requires global φ-field, impractical for distributed)",
       "description": "Continuous φ-weighted routing, theoretical upper bound"
     }

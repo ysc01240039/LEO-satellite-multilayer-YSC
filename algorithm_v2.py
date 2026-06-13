@@ -600,20 +600,20 @@ def compute_algorithm_complexity():
             'description': 'k nearest satellites with ECMP splitting',
         },
         'CBDP v2': {
-            'time': 'O(grid³ + N + M * n_cores)',
-            'space': 'O(grid³)',
+            'time': 'O(grid^3 + N + M * n_cores)',
+            'space': 'O(grid^3)',
             'communication_overhead': 'O(n_cores * k_neighbors) per update',
             'description': 'φ-field density + Gaussian smoothing + maximum_filter + routing',
         },
         'CBDP v3': {
-            'time': 'O(grid³ + N + M * n_cores * k_cores)',
-            'space': 'O(grid³)',
+            'time': 'O(grid^3 + N + M * n_cores * k_cores)',
+            'space': 'O(grid^3)',
             'communication_overhead': 'O(n_cores * k_neighbors) per update',
             'description': 'v2 + grid search over (alpha, k_cores) + demand-weighted φ',
         },
         'PDE Direct': {
-            'time': 'O(grid³ + N + M * n_cores)',
-            'space': 'O(grid³)',
+            'time': 'O(grid^3 + N + M * n_cores)',
+            'space': 'O(grid^3)',
             'communication_overhead': '0 (requires global φ-field, impractical for distributed)',
             'description': 'Continuous φ-weighted routing, theoretical upper bound',
         },
@@ -1639,8 +1639,8 @@ print(f"  {'-'*82}")
 for algo_name, info in complexity.items():
     print(f"  {algo_name:<18} {info['time']:<22} {info['space']:<12} {info['communication_overhead']:<30}")
 
-print(f"\n  Key insight: CBDP v2/v3 trade O(grid³) preprocessing for O(n_cores) routing.")
-print(f"  For N=1000, grid_res=50: grid³=125k cells, n_cores≈120 → routing is O(120) per GS.")
+print(f"\n  Key insight: CBDP v2/v3 trade O(grid^3) preprocessing for O(n_cores) routing.")
+print(f"  For N=1000, grid_res=50: grid^3=125k cells, n_cores~120 -> routing is O(120) per GS.")
 print(f"  PDE Direct requires global φ-field knowledge — impractical for distributed deployment.")
 print(f"  CBDP v2/v3 use distributed protocol (φ broadcast + core mesh) with <3% link overhead.")
 
