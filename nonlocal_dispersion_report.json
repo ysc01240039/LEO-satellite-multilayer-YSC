@@ -1,0 +1,78 @@
+{
+  "version": "3.0",
+  "pde_type": "nonlocal_26neighbor_gaussian_kernel",
+  "grid": {
+    "res": 40,
+    "dx": 0.5,
+    "sigma": 1.0,
+    "D": 4.0
+  },
+  "stencil": {
+    "n_neighbors": 26,
+    "C0": 30.155556790629344,
+    "C_prime_0": -7.008757144022665
+  },
+  "critical_line": {
+    "nonlocal_numerical": {
+      "0.1": 0.4307112085274421,
+      "0.2": 0.4333864256837406,
+      "0.3": 0.4360616894052364,
+      "0.4": 0.43873690656153486,
+      "0.5": 0.4414121702830307,
+      "0.6": 0.4440873874393292,
+      "0.8": 0.44943786831712346,
+      "1.0": 0.45478834919491784,
+      "1.5": 0.46816457467200223,
+      "2.0": 0.48154075358388937
+    },
+    "local_ks_comparison": {
+      "0.1": 0.17324555320336762,
+      "0.2": 0.41888543819998314,
+      "0.3": 0.7186335345030995,
+      "0.4": 1.065964425626941,
+      "0.5": 1.4571067811865475,
+      "0.6": 1.88951600308978,
+      "0.8": 2.871083505599865,
+      "1.0": 4.0,
+      "1.5": 7.424234614174766,
+      "2.0": 11.65685424949238
+    },
+    "simplified_formula": "gamma_c(beta) = (k2_disc_max + beta) / |C(k_max)| = (16 + beta) / 37.38 ≈ 0.428 + 0.027*beta",
+    "C0": 30.155556790629344
+  },
+  "saturation_fits": {
+    "exponential": {
+      "formula": "n = 123.091 - 31.504 * exp(-gamma/0.5729)",
+      "R2": 0.9831375870524411,
+      "n_inf": 123.09121070325276,
+      "A": 31.504447988596066,
+      "gamma_char": 0.5728872416597017
+    },
+    "physics_based": {
+      "formula": "n = 91.6 + (123.1-91.6)*(1-exp(-gamma/0.573))",
+      "R2": 0.9831375870524763,
+      "n_baseline": 91.58676435787842,
+      "n_grid_max": 123.09121441194068,
+      "gamma_char": 0.5728874345930506
+    },
+    "power_law": {
+      "formula": "n = -1193.6 + 1310.1 * gamma^0.0071",
+      "R2": 0.9739840870964508
+    }
+  },
+  "universal_scaling": {
+    "n_norm_formula": "1 - exp(-1.0001 * gamma_norm)",
+    "R2": 0.4694484293629576,
+    "alpha": 1.0001300457464397
+  },
+  "beta_independence": {
+    "max_std": 1.3912597109574234,
+    "confirmed": true
+  },
+  "local_vs_nonlocal_summary": {
+    "local_gamma_c_beta06": 3.15,
+    "nonlocal_gamma_c_beta06": 0.4440873874393292,
+    "ratio": 0.14098012299661244,
+    "key_difference": "Nonlocal kernel amplifies chemotaxis at small k by factor ~C0, making patterns always favorable at moderate gamma"
+  }
+}

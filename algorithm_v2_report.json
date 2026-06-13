@@ -1,0 +1,853 @@
+{
+  "version": "2.0",
+  "dependencies": [
+    "nonlocal_dispersion_report.json",
+    "full_phase_diagram_summary.json"
+  ],
+  "phase_diagram_parameters": {
+    "n_baseline": 91.58676435787842,
+    "n_grid_max": 123.09121441194068,
+    "gamma_char": 0.5728874345930506,
+    "C0": 30.155556790629344,
+    "gamma_c_beta_06": 0.4440873874393292,
+    "saturation_formula": "n = 91.6 + (123.1-91.6)*(1-exp(-γ/0.573))"
+  },
+  "benchmark_results": [
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "gamma_opt": 0.1779827150423294,
+      "n_cores_pred": 16.5,
+      "n_cores_actual": 7,
+      "n_cores_v3": 7,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1889.8565953858015,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8807.647600985827,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 5.351345886203671,
+        "avg_dist_km": 2120.0669792566946,
+        "n_used": 29
+      },
+      "cbdp": {
+        "imbalance": 3.6669134946914856,
+        "avg_dist_km": 3406.738892123017,
+        "n_used": 46
+      },
+      "cbdp_v3": {
+        "imbalance": 6.189803342414734,
+        "avg_dist_km": 1532.4108123200508,
+        "n_used": 16,
+        "alpha": 0.5,
+        "k_cores": 1
+      },
+      "cbdp_vs_greedy": {
+        "imbalance_reduction_pct": -21.14038241530023,
+        "distance_reduction_pct": -80.26441267770133,
+        "efficiency_gain_pct": -129.99999999999997
+      },
+      "cbdp_vs_optimal": {
+        "imbalance_ratio": 0.6852320094175135,
+        "distance_ratio": 1.606901539175633
+      },
+      "cbdp_v3_vs_optimal": {
+        "imbalance_ratio": 1.1566816038508545,
+        "distance_ratio": 0.7228124523015406
+      },
+      "cbdp_v3_vs_greedy": {
+        "distance_reduction_pct": 18.91391039608381,
+        "efficiency_gain_pct": 19.999999999999996
+      }
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "gamma_opt": 0.1779827150423294,
+      "n_cores_pred": 12.0,
+      "n_cores_actual": 6,
+      "n_cores_v3": 5,
+      "greedy": {
+        "imbalance": 3.788323316637962,
+        "avg_dist_km": 2748.771306190353,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9540.988666177025,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.75181439671374,
+        "avg_dist_km": 2845.4164477004333,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 3.914618584268517,
+        "avg_dist_km": 4486.5151523757395,
+        "n_used": 34
+      },
+      "cbdp_v3": {
+        "imbalance": 4.872712412616882,
+        "avg_dist_km": 2760.0399835675585,
+        "n_used": 18,
+        "alpha": 0.1,
+        "k_cores": 2
+      },
+      "cbdp_vs_greedy": {
+        "imbalance_reduction_pct": -3.3338038249237645,
+        "distance_reduction_pct": -63.21893139207005,
+        "efficiency_gain_pct": -78.94736842105263
+      },
+      "cbdp_vs_optimal": {
+        "imbalance_ratio": 0.8238155486409127,
+        "distance_ratio": 1.5767516758404856
+      },
+      "cbdp_v3_vs_optimal": {
+        "imbalance_ratio": 1.0254424953943388,
+        "distance_ratio": 0.9699950901029362
+      },
+      "cbdp_v3_vs_greedy": {
+        "distance_reduction_pct": -0.4099532526343097,
+        "efficiency_gain_pct": 5.263157894736848
+      }
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "gamma_opt": 0.1779827150423294,
+      "n_cores_pred": 125.0,
+      "n_cores_actual": 141,
+      "n_cores_v3": 141,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 908.3729043330147,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8727.045802032142,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1120.9855205138233,
+        "n_used": 45
+      },
+      "cbdp": {
+        "imbalance": 21.708481163157394,
+        "avg_dist_km": 1336.0067604596911,
+        "n_used": 53
+      },
+      "cbdp_v3": {
+        "imbalance": 18.455406390779018,
+        "avg_dist_km": 1490.066919340782,
+        "n_used": 71,
+        "alpha": 0.1,
+        "k_cores": 5
+      },
+      "cbdp_vs_greedy": {
+        "imbalance_reduction_pct": 5.334519019637851,
+        "distance_reduction_pct": -47.07690576048969,
+        "efficiency_gain_pct": -165.0
+      },
+      "cbdp_vs_optimal": {
+        "imbalance_ratio": 0.8009245741887763,
+        "distance_ratio": 1.1918144668338884
+      },
+      "cbdp_v3_vs_optimal": {
+        "imbalance_ratio": 0.6809038547616946,
+        "distance_ratio": 1.329247249025825
+      },
+      "cbdp_v3_vs_greedy": {
+        "distance_reduction_pct": -64.03691834411156,
+        "efficiency_gain_pct": -254.99999999999997
+      }
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "gamma_opt": 0.1779827150423294,
+      "n_cores_pred": 250.0,
+      "n_cores_actual": 138,
+      "n_cores_v3": 138,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 839.4093408074771,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8062.56150635229,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.20855312160955,
+        "avg_dist_km": 1037.312465168296,
+        "n_used": 51
+      },
+      "cbdp": {
+        "imbalance": 25.066870955631366,
+        "avg_dist_km": 1403.5774318384038,
+        "n_used": 87
+      },
+      "cbdp_v3": {
+        "imbalance": 56.10914866723213,
+        "avg_dist_km": 1512.127553691445,
+        "n_used": 76,
+        "alpha": 0.1,
+        "k_cores": 5
+      },
+      "cbdp_vs_greedy": {
+        "imbalance_reduction_pct": 45.34469321338792,
+        "distance_reduction_pct": -67.21012783682158,
+        "efficiency_gain_pct": -334.99999999999994
+      },
+      "cbdp_vs_optimal": {
+        "imbalance_ratio": 0.46241542177665645,
+        "distance_ratio": 1.3530902972526064
+      },
+      "cbdp_v3_vs_optimal": {
+        "imbalance_ratio": 1.0350608056510722,
+        "distance_ratio": 1.4577358360830204
+      },
+      "cbdp_v3_vs_greedy": {
+        "distance_reduction_pct": -80.14185453748237,
+        "efficiency_gain_pct": -280.0
+      }
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "gamma_opt": 0.1779827150423294,
+      "n_cores_pred": 1102.0,
+      "n_cores_actual": 1247,
+      "n_cores_v3": 1068,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 463.8795074301688,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8400.953788791669,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 144.99114529859804,
+        "avg_dist_km": 579.0107261203268,
+        "n_used": 55
+      },
+      "cbdp": {
+        "imbalance": 267.21799926053836,
+        "avg_dist_km": 798.7546123604748,
+        "n_used": 58
+      },
+      "cbdp_v3": {
+        "imbalance": 136.52352251532352,
+        "avg_dist_km": 838.1376650775189,
+        "n_used": 82,
+        "alpha": 0.1,
+        "k_cores": 5
+      },
+      "cbdp_vs_greedy": {
+        "imbalance_reduction_pct": -32.17713473886974,
+        "distance_reduction_pct": -72.19010531106878,
+        "efficiency_gain_pct": -190.0
+      },
+      "cbdp_vs_optimal": {
+        "imbalance_ratio": 1.842995299542076,
+        "distance_ratio": 1.3795160889549427
+      },
+      "cbdp_v3_vs_optimal": {
+        "imbalance_ratio": 0.9415990351284135,
+        "distance_ratio": 1.447533918228903
+      },
+      "cbdp_v3_vs_greedy": {
+        "distance_reduction_pct": -80.68003687437948,
+        "efficiency_gain_pct": -309.99999999999994
+      }
+    }
+  ],
+  "aggregate_performance": {
+    "avg_distance_reduction_vs_greedy_pct": -65.99209659563027,
+    "avg_satellite_reduction_vs_greedy_pct": -179.7894736842105,
+    "avg_v2_distance_ratio_vs_optimal": 1.421614813611511,
+    "avg_v2_imbalance_ratio_vs_optimal": 0.9230765707131869,
+    "avg_v3_distance_ratio_vs_optimal": 1.185464909148445,
+    "avg_v3_imbalance_ratio_vs_optimal": 0.9679375589572746,
+    "weighted_by_N": {
+      "v2_distance_ratio_vs_optimal": 1.363607444837076,
+      "v2_imbalance_ratio_vs_optimal": 1.5064047572581925,
+      "v3_distance_ratio_vs_optimal": 1.4276576483437033,
+      "v3_imbalance_ratio_vs_optimal": 0.9384994197128945
+    }
+  },
+  "scaling_laws": {
+    "core_count": "n_cores(N,γ) = N * [f_baseline + (f_max-f_baseline)*(1-exp(-γ/γ_char))]",
+    "latency": "d_core ∝ L / n_cores^(1/3)",
+    "routing_table": "|RT| ∝ n_cores + N/n_cores, optimal at n_cores=√N",
+    "energy": "E ∝ N_active, reduction factor ≈ 1 - n_cores/N"
+  },
+  "optimal_gamma_table": [
+    {
+      "N": 100,
+      "sqrt_N": 10,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 500,
+      "sqrt_N": 22,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 1000,
+      "sqrt_N": 31,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 5000,
+      "sqrt_N": 70,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 10000,
+      "sqrt_N": 100,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 30000,
+      "sqrt_N": 173,
+      "gamma_opt": 0.0
+    },
+    {
+      "N": 100000,
+      "sqrt_N": 316,
+      "gamma_opt": 0.0
+    }
+  ],
+  "statistical_significance": {
+    "N_runs": 5,
+    "test_N": 500,
+    "results": {}
+  },
+  "sensitivity_analysis": [
+    {
+      "target_frac": 0.22,
+      "gamma": 0.0,
+      "imbalance": 31.590359311758938,
+      "avg_dist_km": 1195.9383299421563,
+      "n_cores": 83,
+      "n_used": 44
+    },
+    {
+      "target_frac": 0.23,
+      "gamma": 0.007564132377880385,
+      "imbalance": 31.590359311758938,
+      "avg_dist_km": 1195.9383299421563,
+      "n_cores": 83,
+      "n_used": 44
+    },
+    {
+      "target_frac": 0.24000000000000002,
+      "gamma": 0.08645978408663865,
+      "imbalance": 31.590359311758938,
+      "avg_dist_km": 1195.9383299421563,
+      "n_cores": 83,
+      "n_used": 44
+    },
+    {
+      "target_frac": 0.25,
+      "gamma": 0.1779827150423294,
+      "imbalance": 29.771022238714917,
+      "avg_dist_km": 1197.0285215432607,
+      "n_cores": 124,
+      "n_used": 47
+    },
+    {
+      "target_frac": 0.26,
+      "gamma": 0.2869596348645991,
+      "imbalance": 36.30545536943052,
+      "avg_dist_km": 1173.8305843317403,
+      "n_cores": 230,
+      "n_used": 48
+    },
+    {
+      "target_frac": 0.27,
+      "gamma": 0.42165435239898497,
+      "imbalance": 36.30545536943052,
+      "avg_dist_km": 1108.7022866428965,
+      "n_cores": 326,
+      "n_used": 48
+    },
+    {
+      "target_frac": 0.28,
+      "gamma": 0.5980804499315294,
+      "imbalance": 36.30545536943052,
+      "avg_dist_km": 1110.1878004723883,
+      "n_cores": 326,
+      "n_used": 48
+    }
+  ],
+  "gamma_scale_calibration": [
+    {
+      "scale": 1.0,
+      "n_actual": 44,
+      "bias_pct": -64.8,
+      "imbalance": 31.590359311758938
+    },
+    {
+      "scale": 1.5448591479026756,
+      "n_actual": 46,
+      "bias_pct": -63.2,
+      "imbalance": 31.590359311758938
+    },
+    {
+      "scale": 2.386589786858581,
+      "n_actual": 49,
+      "bias_pct": -60.8,
+      "imbalance": 31.590359311758938
+    },
+    {
+      "scale": 3.686945064519575,
+      "n_actual": 56,
+      "bias_pct": -55.2,
+      "imbalance": 31.590359311758938
+    },
+    {
+      "scale": 5.695810810737687,
+      "n_actual": 74,
+      "bias_pct": -40.8,
+      "imbalance": 40.84530586299301
+    },
+    {
+      "scale": 8.79922543569107,
+      "n_actual": 91,
+      "bias_pct": -27.200000000000003,
+      "imbalance": 29.771022238714913
+    },
+    {
+      "scale": 13.593563908785255,
+      "n_actual": 124,
+      "bias_pct": -0.8,
+      "imbalance": 29.771022238714917
+    },
+    {
+      "scale": 21.000141557086554,
+      "n_actual": 202,
+      "bias_pct": 61.6,
+      "imbalance": 36.30545536943052
+    },
+    {
+      "scale": 32.4422607917163,
+      "n_actual": 104,
+      "bias_pct": -16.8,
+      "imbalance": 33.4853783751604
+    },
+    {
+      "scale": 50.11872336272722,
+      "n_actual": 132,
+      "bias_pct": 5.6000000000000005,
+      "imbalance": 29.771022238714913
+    }
+  ],
+  "best_gamma_scale": 13.593563908785255,
+  "time_varying_demand": [
+    {
+      "hour": 0,
+      "n_cores": 51,
+      "imbalance": 49.18098816301248,
+      "avg_dist_km": 1362.2836727662261,
+      "demand_ratio": 0.2521269868698982,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 1,
+      "n_cores": 55,
+      "imbalance": 51.27230195800036,
+      "avg_dist_km": 1336.5801725709011,
+      "demand_ratio": 0.28365653908445276,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 2,
+      "n_cores": 58,
+      "imbalance": 51.929964318136065,
+      "avg_dist_km": 1313.5536750034282,
+      "demand_ratio": 0.30725874018397087,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 3,
+      "n_cores": 61,
+      "imbalance": 50.22173391464863,
+      "avg_dist_km": 1316.8580851197505,
+      "demand_ratio": 0.3290842426264676,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 4,
+      "n_cores": 62,
+      "imbalance": 47.145131624064206,
+      "avg_dist_km": 1328.8478364004802,
+      "demand_ratio": 0.34998922999797744,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 5,
+      "n_cores": 62,
+      "imbalance": 45.94394336059218,
+      "avg_dist_km": 1346.9975299268312,
+      "demand_ratio": 0.36561015896689175,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 6,
+      "n_cores": 54,
+      "imbalance": 43.22047759324207,
+      "avg_dist_km": 1365.4367617436883,
+      "demand_ratio": 0.3772752887406771,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 7,
+      "n_cores": 65,
+      "imbalance": 37.81577462517006,
+      "avg_dist_km": 1348.7175510102115,
+      "demand_ratio": 0.39859553157655553,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 8,
+      "n_cores": 66,
+      "imbalance": 33.74699648700638,
+      "avg_dist_km": 1365.7409575431298,
+      "demand_ratio": 0.40228672707949836,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 9,
+      "n_cores": 67,
+      "imbalance": 43.070863643688384,
+      "avg_dist_km": 1335.5047143004406,
+      "demand_ratio": 0.3992009747136902,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 10,
+      "n_cores": 66,
+      "imbalance": 51.38863466000299,
+      "avg_dist_km": 1344.0283050742091,
+      "demand_ratio": 0.38711293677512854,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 11,
+      "n_cores": 66,
+      "imbalance": 58.10330662152928,
+      "avg_dist_km": 1363.5518842593303,
+      "demand_ratio": 0.3692329209945034,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 12,
+      "n_cores": 61,
+      "imbalance": 62.26028685810773,
+      "avg_dist_km": 1344.8569383092731,
+      "demand_ratio": 0.35140864738128513,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 13,
+      "n_cores": 58,
+      "imbalance": 64.12110264224766,
+      "avg_dist_km": 1340.4909859733793,
+      "demand_ratio": 0.32982180517664905,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 14,
+      "n_cores": 56,
+      "imbalance": 62.99116913009358,
+      "avg_dist_km": 1342.516639297322,
+      "demand_ratio": 0.30984932611137744,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 15,
+      "n_cores": 53,
+      "imbalance": 58.48022446662315,
+      "avg_dist_km": 1342.292560077723,
+      "demand_ratio": 0.2913479751802952,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 16,
+      "n_cores": 52,
+      "imbalance": 51.36761497188093,
+      "avg_dist_km": 1405.7675049675481,
+      "demand_ratio": 0.2667069700187646,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 17,
+      "n_cores": 49,
+      "imbalance": 39.962537727234505,
+      "avg_dist_km": 1432.324894923478,
+      "demand_ratio": 0.2409565055364814,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 18,
+      "n_cores": 47,
+      "imbalance": 42.55949245022355,
+      "avg_dist_km": 1419.1655005723378,
+      "demand_ratio": 0.21421618516662333,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 19,
+      "n_cores": 47,
+      "imbalance": 48.41458336751633,
+      "avg_dist_km": 1424.4031912799287,
+      "demand_ratio": 0.20863805245764355,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 20,
+      "n_cores": 46,
+      "imbalance": 51.24633698661708,
+      "avg_dist_km": 1427.2331469113142,
+      "demand_ratio": 0.2042102589516175,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 21,
+      "n_cores": 46,
+      "imbalance": 51.170614468728175,
+      "avg_dist_km": 1429.2862577523504,
+      "demand_ratio": 0.20083548146370345,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 22,
+      "n_cores": 45,
+      "imbalance": 46.33893324887667,
+      "avg_dist_km": 1452.8402112905403,
+      "demand_ratio": 0.2060791596993712,
+      "target_frac_t": 0.25
+    },
+    {
+      "hour": 23,
+      "n_cores": 46,
+      "imbalance": 43.8284487698407,
+      "avg_dist_km": 1396.0667541039713,
+      "demand_ratio": 0.222042859302842,
+      "target_frac_t": 0.25
+    }
+  ],
+  "ground_station_robustness": [
+    {
+      "pattern": "uniform",
+      "n_gs": 20,
+      "imbalance": 26.666666666666668,
+      "avg_dist_km": 1197.0285215432607
+    },
+    {
+      "pattern": "northern",
+      "n_gs": 20,
+      "imbalance": 20.833333333333336,
+      "avg_dist_km": 1168.456408086322
+    },
+    {
+      "pattern": "oceanic",
+      "n_gs": 20,
+      "imbalance": 19.166666666666668,
+      "avg_dist_km": 1202.44966171898
+    },
+    {
+      "pattern": "southern",
+      "n_gs": 20,
+      "imbalance": 20.833333333333336,
+      "avg_dist_km": 1141.4097991325093
+    },
+    {
+      "pattern": "sparse",
+      "n_gs": 10,
+      "imbalance": 41.66666666666667,
+      "avg_dist_km": 1232.0996433774949
+    },
+    {
+      "pattern": "dense",
+      "n_gs": 50,
+      "imbalance": 10.666666666666666,
+      "avg_dist_km": 1191.8482521750254
+    }
+  ],
+  "pde_bridge": {
+    "cosine_similarity": 0.9689485003239131,
+    "bridge_status": "ESTABLISHED",
+    "pde_direct": {
+      "imbalance": 29.200371950645764,
+      "avg_dist_km": 1252.1693938077601
+    },
+    "cbdp_v3": {
+      "imbalance": 29.771022238714917,
+      "avg_dist_km": 1197.0285215432607
+    }
+  },
+  "throughput_and_overhead": {
+    "throughput_mbps": {},
+    "protocol_overhead_kbps": [
+      {
+        "N": 66,
+        "n_cores": 7,
+        "overhead_kbps": 0.6912,
+        "pct_of_link_capacity": 0.039789204560225055
+      },
+      {
+        "N": 500,
+        "n_cores": 141,
+        "overhead_kbps": 8.6144,
+        "pct_of_link_capacity": 0.49589138275984185
+      },
+      {
+        "N": 1000,
+        "n_cores": 138,
+        "overhead_kbps": 11.6992,
+        "pct_of_link_capacity": 0.6734691290378833
+      },
+      {
+        "N": 4408,
+        "n_cores": 1247,
+        "overhead_kbps": 76.096,
+        "pct_of_link_capacity": 4.380496687232184
+      }
+    ]
+  },
+  "extended_constellations": [
+    {
+      "name": "Starlink-Gen2",
+      "N": 30000,
+      "n_cores_pred": 7500.0,
+      "n_cores_frac": 0.25,
+      "imbalance": 0.0,
+      "dist_ratio": 0.0
+    },
+    {
+      "name": "Kuiper",
+      "N": 3236,
+      "n_cores_pred": 447.0,
+      "n_cores_frac": 0.1381334981458591,
+      "imbalance": 86.42750438247025,
+      "dist_ratio": 1.1093247987933448
+    },
+    {
+      "name": "Guowang",
+      "N": 13000,
+      "n_cores_pred": 3227.0,
+      "n_cores_frac": 0.24823076923076923,
+      "imbalance": 1439.242922384479,
+      "dist_ratio": 1.1551978320550873
+    }
+  ],
+  "queue_delay_analysis": {
+    "capacity_per_sat": 8.707115103580955,
+    "model": "M/M/1 approximation with overflow penalty",
+    "metrics": {
+      "Greedy": {
+        "n_overloaded": 20,
+        "overload_fraction": 1.0,
+        "avg_propagation_delay_ms": 1.5462650247672294,
+        "avg_queue_delay_ms": null,
+        "avg_total_delay_ms": 1.5462650247672294
+      },
+      "Nearest-3": {
+        "n_overloaded": 55,
+        "overload_fraction": 1.0,
+        "avg_propagation_delay_ms": 1.9300357537344226,
+        "avg_queue_delay_ms": null,
+        "avg_total_delay_ms": 1.9300357537344226
+      },
+      "CBDP v2": {
+        "n_overloaded": 53,
+        "overload_fraction": 0.9137931034482759,
+        "avg_propagation_delay_ms": 2.662515374534916,
+        "avg_queue_delay_ms": 476.35084933781746,
+        "avg_total_delay_ms": 479.01336471235237
+      },
+      "CBDP v3": {
+        "n_overloaded": 69,
+        "overload_fraction": 0.8414634146341463,
+        "avg_propagation_delay_ms": 2.793792216925063,
+        "avg_queue_delay_ms": 2721.2591948142726,
+        "avg_total_delay_ms": 2724.0529870311975
+      }
+    }
+  },
+  "algorithm_complexity": {
+    "Greedy": {
+      "time": "O(M * N * log N)",
+      "space": "O(N)",
+      "communication_overhead": "0 (centralized)",
+      "description": "cKDTree query per GS, sorted by load"
+    },
+    "RoundRobin": {
+      "time": "O(M)",
+      "space": "O(N)",
+      "communication_overhead": "0 (centralized)",
+      "description": "Single-pass assignment, no spatial query"
+    },
+    "Nearest-3": {
+      "time": "O(M * N)",
+      "space": "O(N)",
+      "communication_overhead": "0 (centralized)",
+      "description": "Full distance matrix per GS, argsort top-3"
+    },
+    "ShortestPath": {
+      "time": "O(M * N)",
+      "space": "O(N)",
+      "communication_overhead": "0 (centralized)",
+      "description": "Single nearest satellite per GS"
+    },
+    "OSPF-style": {
+      "time": "O(M * N)",
+      "space": "O(N)",
+      "communication_overhead": "0 (centralized)",
+      "description": "k nearest satellites with ECMP splitting"
+    },
+    "CBDP v2": {
+      "time": "O(grid³ + N + M * n_cores)",
+      "space": "O(grid³)",
+      "communication_overhead": "O(n_cores * k_neighbors) per update",
+      "description": "φ-field density + Gaussian smoothing + maximum_filter + routing"
+    },
+    "CBDP v3": {
+      "time": "O(grid³ + N + M * n_cores * k_cores)",
+      "space": "O(grid³)",
+      "communication_overhead": "O(n_cores * k_neighbors) per update",
+      "description": "v2 + grid search over (alpha, k_cores) + demand-weighted φ"
+    },
+    "PDE Direct": {
+      "time": "O(grid³ + N + M * n_cores)",
+      "space": "O(grid³)",
+      "communication_overhead": "0 (requires global φ-field, impractical for distributed)",
+      "description": "Continuous φ-weighted routing, theoretical upper bound"
+    }
+  },
+  "communication_constraints": {
+    "link_availability_model": "exp(-d/d_ref) * (0.95 + 0.049*sin(elevation)), d_ref=5000km",
+    "atmospheric_attenuation": "Ka-band: 0.2 dB/km (clear), 0.5 (light rain), 2.0 (moderate rain)",
+    "assumptions": [
+      "AWGN channel with free-space path loss",
+      "Atmospheric fading and Doppler shift treated as secondary corrections",
+      "Inter-satellite link availability 99.5-99.9% (ITU-R S.1528)",
+      "No inter-satellite interference modeled (orthogonal frequency allocation assumed)"
+    ]
+  }
+}

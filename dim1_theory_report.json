@@ -1,0 +1,104 @@
+{
+  "theory_version": "1.0",
+  "physical_params": {
+    "layer_params": {
+      "1": {
+        "height_km": 500,
+        "inc_deg": 50,
+        "n_sats": 200
+      },
+      "2": {
+        "height_km": 800,
+        "inc_deg": 55,
+        "n_sats": 200
+      },
+      "3": {
+        "height_km": 1100,
+        "inc_deg": 60,
+        "n_sats": 200
+      },
+      "4": {
+        "height_km": 1400,
+        "inc_deg": 65,
+        "n_sats": 200
+      },
+      "5": {
+        "height_km": 1700,
+        "inc_deg": 70,
+        "n_sats": 200
+      }
+    },
+    "R_earth_km": 6371.0,
+    "N_total": 1000,
+    "avg_spacing_km": 837.4977875541786
+  },
+  "pde_coefficients": {
+    "D_phys_km2_s": 6117.344623866398,
+    "gamma_phys_km2_s": 1.9403792401445732,
+    "beta_phys_per_s": 8.333333333333332,
+    "source_phys_per_km2_s": 2.8514296343200375e-06
+  },
+  "dimensionless": {
+    "L_ref_km": 837.4977875541786,
+    "T_ref_s": 114.65800723759625,
+    "D_tilde": 1.0,
+    "gamma_tilde": 1.0370285678025433e-07,
+    "beta_tilde": 955.4833936466352,
+    "S_tilde": 1.0
+  },
+  "control_parameters": {
+    "Pi1_gamma_beta": 1.0853444180172384e-10,
+    "Pi2_nonlinear_drive": 1.1359113358056221e-13,
+    "Pi3_spatial_resolution": 0.31138840091099607
+  },
+  "key_insight": {
+    "feedback_amplification_factor": 57857615.36650779,
+    "description": "Effective gamma ~ 10^6 x physical gamma due to positive feedback loop"
+  },
+  "layer_by_layer": [
+    {
+      "layer": 1,
+      "height_km": 500,
+      "velocity_km_s": 7.616556585247121,
+      "spacing_km": 1722.3042874989603,
+      "D_km2_s": 13118.028062749558,
+      "gamma_phys": 0.7653559019362387
+    },
+    {
+      "layer": 2,
+      "height_km": 800,
+      "velocity_km_s": 7.455534529410365,
+      "spacing_km": 1797.5031357378903,
+      "D_km2_s": 13401.346695217248,
+      "gamma_phys": 0.8160243091998485
+    },
+    {
+      "layer": 3,
+      "height_km": 1100,
+      "velocity_km_s": 7.304311384190566,
+      "spacing_km": 1872.7019839768204,
+      "D_km2_s": 13678.798420758148,
+      "gamma_phys": 0.8677639766185309
+    },
+    {
+      "layer": 4,
+      "height_km": 1400,
+      "velocity_km_s": 7.161931991400102,
+      "spacing_km": 1947.9008322157506,
+      "D_km2_s": 13950.733286320867,
+      "gamma_phys": 0.9205531664150646
+    },
+    {
+      "layer": 5,
+      "height_km": 1700,
+      "velocity_km_s": 7.02756665558916,
+      "spacing_km": 2023.0996804546805,
+      "D_km2_s": 14217.467855296398,
+      "gamma_phys": 0.9743714129006941
+    }
+  ],
+  "predicted_critical_condition": {
+    "gamma_c_beta_c_estimate": "~ 1/phi_0",
+    "note": "Exact value from Dimension 2 (linear stability)"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "theory_version": "6.0",
+  "dependencies": [
+    "dim1_theory_report.json"
+  ],
+  "gradient_flow": {
+    "form": "∂φ/∂t = -δF/δφ",
+    "consequence": "F monotonically decreases"
+  },
+  "free_energy_functional": {
+    "expression": "F[φ] = ∫[(D/2)|∇φ|² - (γ/6)φ³ + (β/2)φ² - S·φ + (γ/2)G*φ]dr",
+    "terms": {
+      "diffusion": "(D/2)|∇φ|²",
+      "chemotaxis_driving": "-(γ/6)φ³",
+      "decay": "(β/2)φ²",
+      "source": "-S·φ",
+      "nonlocal": "(γ/2)G*φ"
+    },
+    "properties": [
+      "bounded_below",
+      "coercive",
+      "differentiable"
+    ]
+  },
+  "landau_free_energy": {
+    "form_near_onset": "F(A) = -(mu/2)A² + (g/4)A⁴",
+    "mu": 2.175416344814579,
+    "g": 29.47991423232451,
+    "minima_at": "A = ±0.2716",
+    "barrier_height": 0.0401
+  },
+  "chemical_potential": {
+    "expression": "μ_chem = δF/δφ = -D∇²φ + γ∇·(φ∇φ) + βφ - S - γG*φ",
+    "continuity": "∂φ/∂t = -μ_chem → ∂φ/∂t = -∇·J, J = -∇μ_chem"
+  },
+  "thermodynamic_analogy": {
+    "phi": "particle density",
+    "mu_chem": "chemical potential",
+    "F": "Helmholtz free energy",
+    "cores": "phase-separated droplets",
+    "D|∇φ|²": "surface tension",
+    "beta φ²": "harmonic trap"
+  },
+  "effective_temperature": {
+    "T_eff": 0.8333333333333334,
+    "formula": "T_eff = D/(2*beta)",
+    "FDT_holds": true,
+    "equilibrium_distribution": "P[φ] ∝ exp(-F[φ]/T_eff)"
+  },
+  "interface_analysis": {
+    "width_formula": "w = sqrt(D / (beta - gamma*phi0))",
+    "width_dimensionless": 0.3261640365267211,
+    "width_grid_cells": 0.6523280730534422
+  },
+  "pattern_catalog": {
+    "BCC_n_cores": "n³ for n = 1,2,3,...",
+    "HCP_FCC": "alternative close-packed arrangements",
+    "stability_criteria": [
+      "Resonance: k_c·L/(2π) ≈ integer",
+      "Nonlinear stability: cross-coupling",
+      "Eckhaus criterion for envelope",
+      "Boundary compatibility"
+    ]
+  },
+  "h_theorem": {
+    "statement": "dH/dt ≤ 0, =0 iff ∂φ/∂t=0",
+    "consequence": "All attractors are fixed points, no oscillations",
+    "proof_method": "Direct computation of dH/dt"
+  },
+  "key_insight": "The KS system has a gradient flow structure with a well-defined free energy functional. At non-zero effective temperature (stochastic packet arrivals), the equilibrium distribution is Gibbs: P[φ] ∝ exp(-F[φ]/T_eff). Core formation = free energy minimization = most probable state. This gives rigorous mathematical foundation to the claim that core emergence is a thermodynamic phase transition."
+}

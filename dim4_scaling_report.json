@@ -1,0 +1,158 @@
+{
+  "theory_version": "4.0",
+  "dependencies": [
+    "dim2_stability_report.json",
+    "dim3_amplitude_report.json"
+  ],
+  "dimensional_analysis": {
+    "pi_groups": {
+      "Pi1": "gamma*phi0/(D*L)",
+      "Pi2": "S*L^2/D",
+      "Pi3": "sigma/L",
+      "Pi4": "beta*L^2/D",
+      "Pi5": "n_cores/N",
+      "Pi6": "R_core/L",
+      "Pi7": "tau*D/L^2"
+    }
+  },
+  "scaling_exponents": {
+    "alpha_n_cores": {
+      "theory_range": [
+        1.0,
+        1.5
+      ],
+      "best_estimate": 1.25,
+      "interpretation": "n_cores ∝ N^α"
+    },
+    "nu_R_core": {
+      "theory": 0.5,
+      "interpretation": "R_core ∝ gamma^(-ν) far from threshold"
+    },
+    "nu_tilde_R_core": {
+      "theory": 0.5,
+      "interpretation": "R_core ∝ (gamma - gamma_c)^(-ν̃) near threshold"
+    },
+    "z_dynamical": {
+      "theory": 2.0,
+      "fitted": 1.7070489525511652,
+      "interpretation": "τ ∝ ε^(-z)"
+    },
+    "eta_anomalous": {
+      "theory": 0,
+      "interpretation": "S(k) ∝ k^(-2+η), mean-field"
+    },
+    "beta_order_param": {
+      "theory": 0.5,
+      "interpretation": "|A| ∝ ε^β̃"
+    }
+  },
+  "universal_scaling_functions": {
+    "core_count": "n_cores = N * F1(epsilon*N^(1/3), Pi1, Pi2)",
+    "core_radius": "R_core/L = epsilon^(-1/2) * F2(epsilon*N^(1/3), Pi1)",
+    "structure_factor": "S(k) = S0 * |k|^(-2+eta) * G(k*xi)",
+    "density_profile": "phi(r) = |A_steady|^2 * f(r/R_core)"
+  },
+  "multilayer_scaling": [
+    {
+      "layer": 1,
+      "height_km": 500,
+      "velocity_km_s": 7.616556585247121,
+      "satellite_spacing_km": 1722.3042874989603,
+      "D_ratio": 2.1443990602671748,
+      "gamma_ratio": 0.4663311127712433,
+      "n_cores_ratio": 0.10141055868182094,
+      "R_core_ratio": 2.1443990602671748
+    },
+    {
+      "layer": 2,
+      "height_km": 800,
+      "velocity_km_s": 7.455534529410365,
+      "satellite_spacing_km": 1797.5031357378903,
+      "D_ratio": 2.190713049405917,
+      "gamma_ratio": 0.4564723802011325,
+      "n_cores_ratio": 0.09511379591361487,
+      "R_core_ratio": 2.190713049405917
+    },
+    {
+      "layer": 3,
+      "height_km": 1100,
+      "velocity_km_s": 7.304311384190566,
+      "satellite_spacing_km": 1872.7019839768204,
+      "D_ratio": 2.23606797749979,
+      "gamma_ratio": 0.4472135954999579,
+      "n_cores_ratio": 0.08944271909999157,
+      "R_core_ratio": 2.23606797749979
+    },
+    {
+      "layer": 4,
+      "height_km": 1400,
+      "velocity_km_s": 7.161931991400102,
+      "satellite_spacing_km": 1947.9008322157506,
+      "D_ratio": 2.280521066590403,
+      "gamma_ratio": 0.43849627817518716,
+      "n_cores_ratio": 0.08431361972067487,
+      "R_core_ratio": 2.280521066590403
+    },
+    {
+      "layer": 5,
+      "height_km": 1700,
+      "velocity_km_s": 7.02756665558916,
+      "satellite_spacing_km": 2023.0996804546805,
+      "D_ratio": 2.3241240651749333,
+      "gamma_ratio": 0.4302696293128962,
+      "n_cores_ratio": 0.0796566571824222,
+      "R_core_ratio": 2.3241240651749333
+    }
+  ],
+  "numerical_predictions": {
+    "N_scaling": [
+      {
+        "N": 100,
+        "n_cores_linear": 3.2427807610658435,
+        "n_cores_saturated": 3.2427807610658435,
+        "k_c_N": 0.4650029791170924,
+        "lambda_N": 13.512139898779912
+      },
+      {
+        "N": 200,
+        "n_cores_linear": 9.171969064203722,
+        "n_cores_saturated": 9.171969064203722,
+        "k_c_N": 0.6576135196112851,
+        "lambda_N": 9.554525750768587
+      },
+      {
+        "N": 400,
+        "n_cores_linear": 25.942246088526748,
+        "n_cores_saturated": 25.942246088526748,
+        "k_c_N": 0.9300059582341847,
+        "lambda_N": 6.756069949389956
+      },
+      {
+        "N": 600,
+        "n_cores_linear": 47.658949273952466,
+        "n_cores_saturated": 47.658949273952466,
+        "k_c_N": 1.1390200277109381,
+        "lambda_N": 5.516308014185454
+      },
+      {
+        "N": 800,
+        "n_cores_linear": 73.37575251362978,
+        "n_cores_saturated": 73.37575251362978,
+        "k_c_N": 1.3152270392225702,
+        "lambda_N": 4.777262875384293
+      },
+      {
+        "N": 1000,
+        "n_cores_linear": 102.5457315754233,
+        "n_cores_saturated": 102.5457315754233,
+        "k_c_N": 1.4704685327737246,
+        "lambda_N": 4.272913814298154
+      }
+    ],
+    "fitted_alpha": 1.5000000000000004
+  },
+  "data_collapse_methodology": {
+    "procedure": "Plot n_cores/N^alpha vs epsilon*N^(1/3) for all data",
+    "criterion": "Data collapse onto single master curve -> universality confirmed"
+  }
+}

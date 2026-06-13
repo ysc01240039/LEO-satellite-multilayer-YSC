@@ -1,0 +1,103 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+.ipynb
+
+# PyInstaller
+*.manifest
+*.spec
+
+# C++
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.out
+*.a
+*.lib
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+Debug/
+Release/
+x64/
+x86/
+
+# Compiled files
+*.class
+*.pyc
+*.pyo
+*.pyd
+
+# Distribution / packaging
+.pyinstaller/
+*.whl
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated data
+orbit_parquet/
+results/
+quick_scan_results/
+sweep_results/
+multilayer_fast_results/
+
+# Simulation output
+sim_stdout.txt
+sim_stderr.txt
+*.parquet
+*.png
+
+# Temp
+temp_repo/
+
+# Old project files
+figures/
+src/
