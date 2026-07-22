@@ -49,7 +49,7 @@
       "gamma_char": 0.5728872416597017
     },
     "physics_based": {
-      "formula": "n = 91.6 + (123.1-91.6)*(1-exp(-gamma/0.573))",
+      "formula": "n = 91.6 + (123.1-91.6)*(1-exp(-(gamma-gamma_c)/0.573)), gamma_c = 0.444 for beta=0.6",
       "R2": 0.9831375870524763,
       "n_baseline": 91.58676435787842,
       "n_grid_max": 123.09121441194068,

@@ -104,3 +104,15 @@ src/
 
 # Paper writing (local only, not for publication)
 paper/
+
+# Reference PDFs (downloaded papers, too large for git)
+references/
+
+# Simulation logs
+sim_output_*.txt
+sim_error_*.txt
+test_stdout.txt
+test_stderr.txt
+
+# Draft files
+OriginOne.tex

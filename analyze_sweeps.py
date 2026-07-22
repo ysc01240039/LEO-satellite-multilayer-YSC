@@ -24,18 +24,18 @@ warnings.filterwarnings('ignore')
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-RESULTS_DIR = r"E:\pytorchFile\YSC_2\results"
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 
 print("=" * 70)
 print("Real-time Sweep Analysis: Theory vs Simulation")
 print("=" * 70)
 
 # =====================================================================
-# Part 1: N-Scaling Analysis (n_cores ∝ N^α)
+# Part 1: N-Scaling Analysis (n_cores vs N)
 # =====================================================================
 
 print("\n" + "=" * 70)
-print("Part 1: N-Scaling Fit (n_cores ∝ N^α)")
+print("Part 1: N-Scaling (n_cores vs N) — Round 15: n_cores INDEPENDENT of N")
 print("=" * 70)
 
 n_scaling_path = os.path.join(RESULTS_DIR, "n_scaling_summary.json")
@@ -54,44 +54,24 @@ if os.path.exists(n_scaling_path):
     A_fitted = np.exp(intercept)
     
     print(f"\n  Data points: {len(N_vals)}")
-    print(f"  {'N':>8s}  {'n_cores':>10s}  {'log(N)':>8s}  {'log(n)':>8s}")
-    print(f"  {'-'*8}  {'-'*10}  {'-'*8}  {'-'*8}")
+    print(f"  {'N':>8s}  {'n_cores':>10s}")
+    print(f"  {'-'*8}  {'-'*10}")
     for N, n in zip(N_vals, n_cores_vals):
-        print(f"  {N:8d}  {n:10.3f}  {np.log(N):8.4f}  {np.log(n):8.4f}")
+        print(f"  {N:8d}  {n:10.3f}")
     
     print(f"\n  Power law fit: n_cores = {A_fitted:.3f} * N^{alpha_fitted:.4f}")
     print(f"  R² = {r_val**2:.6f}")
     print(f"  alpha (fitted)  = {alpha_fitted:.4f} ± {std_err:.4f}")
     
-    # Theoretical predictions
-    alpha_theory_linear = 1.5        # from dim4 (linear theory)
-    alpha_theory_saturated = 1.25    # from dim4 (with saturation)
-    alpha_theory_weak = 1.0          # from dim4 (weak coupling limit)
-    
-    print(f"\n  Theoretical predictions:")
-    print(f"    α_linear   = 1.50  (dim4, linear dispersion analysis)")
-    print(f"    α_saturated = 1.25  (dim4, with core merging)")
-    print(f"    α_weak      = 1.00  (dim4, weak coupling limit)")
-    
-    # Which theory is closest?
-    diffs = [
-        abs(alpha_fitted - alpha_theory_linear),
-        abs(alpha_fitted - alpha_theory_saturated),
-        abs(alpha_fitted - alpha_theory_weak),
-    ]
-    labels = ["linear (1.50)", "saturated (1.25)", "weak (1.00)"]
-    best_idx = np.argmin(diffs)
-    print(f"\n  Best match: {labels[best_idx]} (Δ = {diffs[best_idx]:.4f})")
-    
-    # Also try curve_fit for power law
-    def power_law(N, A, alpha):
-        return A * N**alpha
-    
-    try:
-        popt, pcov = curve_fit(power_law, N_vals, n_cores_vals, p0=[A_fitted, alpha_fitted])
-        print(f"  Curve fit: n_cores = {popt[0]:.3f} * N^{popt[1]:.4f}")
-    except:
-        pass
+    # CRITICAL (Round 16): ALL sweep data is SYNTHETIC from saturation model.
+    # Model overpredicts by 35% at gamma=6.0 (123.1 vs C++ 92.3).
+    # CRITICAL (Round 15): n_cores is INDEPENDENT of N.
+    # C++ evidence: n_cores ≈ 92.3 for both N=400 and N=1000.
+    print(f"\n  Round 15+16: ALL data is SYNTHETIC (saturation model).")
+    print(f"  n_cores is INDEPENDENT of N (alpha ≈ 0).")
+    print(f"  C++ validated: n_cores ≈ 92.3 at gamma=6.0 for both N=400 and N=1000")
+    print(f"  WARNING: Model predicts 123.1 (35% overestimate) at gamma=6.0")
+    print(f"  Data source: SYNTHETIC (saturation model, DOES NOT MATCH C++ DATA)")
     
     n_analysis = {
         "N": N_vals.tolist(),
@@ -100,9 +80,7 @@ if os.path.exists(n_scaling_path):
         "alpha_std_err": float(std_err),
         "R2": float(r_val**2),
         "A_fitted": float(A_fitted),
-        "alpha_linear_theory": alpha_theory_linear,
-        "alpha_saturated_theory": alpha_theory_saturated,
-        "best_match": labels[best_idx],
+        "note": "Round 15: n_cores independent of N. C++ validated only at gamma=6.0.",
     }
 else:
     print("\n  [WAITING] n_scaling_summary.json not yet available")
@@ -130,11 +108,11 @@ if os.path.exists(gamma_path):
     for g, n in zip(gammas, n_cores_g):
         print(f"  {g:8.1f}  {n:10.3f}")
     
-    # Theory: gamma_c = 1.8895 for beta=0.6
+    # Theory: gamma_c = (16+β)/37.38 ≈ 0.4441 for β=0.6 (nonlocal KS)
     # For gamma >> gamma_c, n_cores ~ constant (saturation)
     # For gamma just above gamma_c, n_cores ~ m * ln(gamma/gamma_c) or power law
     
-    gamma_c_theory = 0.6 * (1 + np.sqrt(0.6))**2  # = 1.8895
+    gamma_c_theory = (16.0 + 0.6) / 37.38  # = 0.4441 (nonlocal KS)
     
     # Fit n_cores vs log(gamma) for gamma > gamma_c
     mask_super = gammas > gamma_c_theory
@@ -183,20 +161,22 @@ comparisons = []
 
 # N-scaling alpha
 if n_analysis:
-    print(f"{'α (core count exponent)':<35s} {'1.25-1.50':>12s} {alpha_fitted:>12.4f} {'✓' if 1.0 <= alpha_fitted <= 1.5 else '△':>8s}")
+    # CRITICAL (Round 16): alpha=0 (n_cores independent of N). C++ validated.
+    print(f"{'α (core count exponent)':<35s} {'0.0 (Round 15)':>12s} {alpha_fitted:>12.4f} {'△':>8s}")
+    print(f"  NOTE: Fitted alpha from synthetic data; C++ shows n_cores≈92.3 for all N.")
 
 # gamma scan: core count saturation
-print(f"{'n_cores at N=400, γ=6':<35s} {'~129 (linear)':>12s} {'135.3 (sim)':>12s} {'✓':>8s}")
+# CRITICAL (Round 16): Model predicts 123.1 at gamma=6.0, C++ shows 92.3 (35% lower)
+print(f"{'n_cores at N=400, γ=6':<35s} {'123.1 (model)':>12s} {'92.3 (C++)':>12s} {'✗':>8s}")
+print(f"  WARNING: Model overestimates by 35%. Synthetic data uses 123.1.")
 
 # Core count at default params
 if n_analysis and len(N_vals) >= 6:
     n1000_sim = n_cores_vals[-1]
-    print(f"{'n_cores at N=1000':<35s} {'~103 (linear)':>12s} {n1000_sim:>12.1f} {'△':>8s}")
-    if n1000_sim > 150:
-        print(f"  Note: 3D grid saturation → more cores than linear theory")
-        print(f"  Linear: V/λ_c³ = 64000/{4.27:.1f}³ ≈ {64000/4.27**3:.0f}")
-        print(f"  With dx=0.5: V_eff = 64000 * 0.125 = 8000")
-        print(f"  n_cores ≈ 64000/({4.27*2:.1f})³ = {64000/(4.27*2)**3:.0f} (adjusted)")
+    # CRITICAL (Round 16): Model predicts 123.1; C++ shows 92.3
+    print(f"{'n_cores at N=1000':<35s} {'123.1 (model)':>12s} {n1000_sim:>12.1f} {'✗':>8s}")
+    print(f"  C++ validated: n_cores ≈ 92.3 at gamma=6.0 (independent of N)")
+    print(f"  Model overestimates by 35% (123.1 vs 92.3)")
 
 # =====================================================================
 # Part 4: Per-Layer Core Count Analysis (Cross-Layer Coupling)
@@ -279,14 +259,14 @@ print("=" * 70)
 
 print("""
 Data collapse is the definitive test of universality class.
-Once the full phase_diagram sweep completes, we will:
+Once the full phase_diagram sweep completes from actual C++ data:
 
 1. For each (gamma, beta, N) triplet, compute:
-   - Scaled core count: n_cores / N^α
-   - Scaling variable: ε · N^{1/3} where ε = sqrt((γ-γ_c)/γ_c)
+   - Scaled core count: n_cores (absolute, independent of N)
+   - Scaling variable: ε where ε = sqrt((γ-γ_c)/γ_c)
 
 2. If mean-field universality holds, ALL points collapse to:
-   n_cores / N^α = Φ(ε · N^{1/3})
+   n_cores = Φ(ε)
    where Φ is a universal scaling function.
 
 3. Quality of collapse: quantified by the spread of Φ values
@@ -294,7 +274,8 @@ Once the full phase_diagram sweep completes, we will:
    - Good collapse: σ/μ < 0.10
    - Poor collapse: σ/μ > 0.20 (wrong universality class or exponents)
 
-Expected result: Data should collapse when α ≈ 1.0-1.5 and ν̃ ≈ 1.0
+CRITICAL (Round 16): Current data is SYNTHETIC. Real C++ data needed.
+Expected result: n_cores ≈ 92.3 at gamma=6.0 (C++ validated).
 """)
 
 # =====================================================================
@@ -318,7 +299,7 @@ if n_analysis:
         print(f"    N={N:4d}: {eff:.4f} cores/sat  [{phase_label} ordering]")
     
     print(f"\n  At γ=6.0, β=0.6: firm deep ordering phase for all N tested.")
-    print(f"  This matches dim5 prediction: γ/γ_c = {6.0/1.8895:.1f} >> 1")
+    print(f"  This matches dim5 prediction: γ/γ_c = {6.0/((16.0+0.6)/37.38):.1f} >> 1")
 else:
     print("\n  [WAITING] Need completed N-scaling data for phase analysis")
 
@@ -333,11 +314,15 @@ output = {
     "gamma_scan": gamma_analysis,
     "layer_analysis": layer_analysis,
     "theoretical_reference": {
-        "gamma_c (beta=0.6)": 1.8895,
-        "k_c (default)": 1.4705,
-        "lambda_c (default)": 4.27,
-        "alpha_range": [1.0, 1.25, 1.5],
+        "gamma_c (beta=0.6)": 0.4441,
+        "k_c (default)": 3.2774,
+        "lambda_c (default)": 1.92,
+        "alpha_n_cores": 0.0,
+        "note": "Round 16: n_cores independent of N (alpha=0). Saturation model UNVALIDATED.",
         "universality_class": "mean-field",
+        "critical_line": "(16+β)/37.38 (nonlocal KS)",
+        "c++_validated": "n_cores ≈ 92.3 at gamma=6.0, beta=0.6",
+        "model_overestimate": "123.1 (35% above C++)",
     },
 }
 
@@ -354,20 +339,22 @@ print(f"{'='*70}")
 # =====================================================================
 
 print("""
-=== KEY FINDINGS ===
+=== KEY FINDINGS (Round 16 corrected) ===
 
-1. N-scaling: n_cores ∝ N^alpha with alpha from C++ simulation data.
-   Compare with theory: alpha ∈ [1.0, 1.5] (mean-field + saturation).
+1. N-scaling: n_cores is INDEPENDENT of N (alpha = 0).
+   C++ validated: n_cores ≈ 92.3 for both N=400 and N=1000.
+   The saturation model predicts 123.1 (35% overestimate) — DO NOT USE.
 
-2. Gamma scan: Core count shows weak dependence on gamma above gamma_c,
-   consistent with pattern saturation at high gamma (dim5 prediction).
+2. Gamma scan: Core count from synthetic saturation model.
+   Model predicts 91.6 (gamma=0) → 123.1 (gamma=6.0), but C++ shows 92.3.
+   The saturation model is FUNDAMENTALLY UNVALIDATED.
 
-3. Cross-layer coupling: Per-layer core distribution reveals whether
-   higher layers (larger D_eff) have fewer but larger cores.
+3. Cross-layer coupling: Per-layer core distribution from synthetic data.
+   All values are model predictions, not C++ data.
 
-4. Phase diagram: Default params (γ=6, β=0.6) are deep in the ordered phase,
-   with γ/γ_c ≈ 3.2, confirming robust core formation.
+4. Phase diagram: Default params (gamma=6, beta=0.6) are deep in the ordered phase,
+   but the quantitative core count prediction is wrong (123.1 vs 92.3).
 
-5. Data collapse validation awaits completion of phase_diagram sweep
-   (gamma-beta grid at fixed N=400).
+5. ALL synthetic data files need to be regenerated from actual C++ simulations.
+   Current data is self-consistent with the model but does NOT match reality.
 """)

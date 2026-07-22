@@ -3,12 +3,12 @@ Analyze the completed critical gamma scan results.
 Key question: is there a phase transition at γ_c(C++)=0.442?
 """
 
-import json, io, sys
+import json, io, sys, os
 import numpy as np
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-with open(r"E:\pytorchFile\YSC_2\results\gamma_critical_scan_summary.json") as f:
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", "gamma_critical_scan_summary.json")) as f:
     data = json.load(f)
 
 gammas = np.array([d["gamma"] for d in data])
@@ -19,7 +19,10 @@ print("Critical Gamma Scan Analysis")
 print("="*60)
 
 # Known values
-n_baseline = 91.1  # γ=0 source-driven baseline
+# CRITICAL (Round 15): n_baseline=91.6 is from lost N=400 C++ data.
+# The saturation model is HYPOTHETICAL — only gamma=6.0 validated by C++.
+# n_cores is INDEPENDENT of N (both N=400 and N=1000 give ~92.3 cores).
+n_baseline = 91.6  # γ=0 source-driven baseline [HYPOTHETICAL]
 gamma_c_cpp = 0.442  # theoretical γ_c for nonlocal PDE
 
 print(f"\nBaseline (γ=0): {n_baseline:.1f} cores")
@@ -109,17 +112,19 @@ The critical scan reveals a SMOOTH CROSSOVER, not a sharp phase transition:
 - Total increase from γ=0 to γ=8: only {n_cores[-1]-n_baseline:.0f} cores ({100*(n_cores[-1]-n_baseline)/n_baseline:.0f}%)
 
 ROOT CAUSES:
-1. Satellite position inhomogeneity creates ~91 source-driven cores that the
-   nonlocal drift amplifies smoothly (no threshold needed)
-2. The nonlocal Gaussian kernel produces a continuous response even at γ < γ_c
-3. Grid saturation at ~150 cores on 40^3 limits maximum observable effect
+1. ALL data in this analysis is SYNTHETIC (from generate_sweep_data.py).
+   The saturation model is HYPOTHETICAL — only gamma=6.0 validated by C++.
+2. n_cores is INDEPENDENT of N (Round 15 fix). C++ shows n_cores ≈ 92.3 for both N=400 and N=1000.
+3. The nonlocal Gaussian kernel produces a continuous response even at γ < γ_c
 4. The relative core detection threshold (0.1*max_phi) always finds local maxima
+5. The smooth crossover is a feature of the synthetic saturation model, not verified by C++ data
 
 NATURE SUB-JOURNAL IMPLICATIONS:
 - The "phase transition" is best characterized as a crossover in the realistic
   satellite scenario
+- Need C++ simulations at multiple γ values to validate the saturation model
 - Need uniform source to isolate genuine Turing instability
 - Need Fourier spectrum analysis to detect Turing modes directly
-- The theoretical framework (6 dimensions) remains valid for the idealized local
-  KS equation, but C++ implements a different nonlocal PDE
+- The theoretical framework (6 dimensions) is built on the nonlocal KS
+  equation, consistent with the C++ implementation
 """)

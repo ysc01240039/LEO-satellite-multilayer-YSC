@@ -29,7 +29,7 @@
       "sats_used": 28
     },
     {
-      "name": "Optimal Hungarian",
+      "name": "Nearest-3 Assignment",
       "type": "upper_bound",
       "load_imbalance": 4.230769230769231,
       "avg_distance_km": 3352.7757888253022,

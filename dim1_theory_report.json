@@ -1,5 +1,33 @@
 {
-  "theory_version": "1.0",
+  "theory_version": "2.0",
+  "correction": "v2.0: Rewritten for NONLOCAL KS equation. Previous v1.0 derived LOCAL KS (∂φ/∂t = D∇²φ - γ∇·(φ∇φ) - βφ + S). The C++ simulation implements the nonlocal form with 26-neighbor stencil operator N[φ]. This version derives the nonlocal PDE from discrete satellite dynamics, computes the stencil coefficients, and provides the correct nonlocal critical line γ_c(β) = (16+β)/37.38.",
+  "nonlocal_pde": {
+    "equation": "∂φ/∂t = D·∇²φ - γ·N[φ] - β·φ + ρ(r)",
+    "nonlocal_operator": "N[φ](r) = ∫[φ(r')-φ(r)]·G(|r-r'|)/|r-r'| dr'",
+    "kernel": "G(r) = exp(-r²/2σ²), σ = 1.0",
+    "key_property": "N[φ] is a LINEAR operator — no intrinsic cubic nonlinearity",
+    "nonlinearity_source": "φ ≥ 0 constraint (clipping at each time step)"
+  },
+  "stencil_analysis": {
+    "grid_spacing": 0.5,
+    "kernel_width": 1.0,
+    "num_neighbors": 26,
+    "C0_continuum": 30.155556790629344,
+    "C_k_nyquist": -37.38003810145422,
+    "C0_Nyquist": 37.38003810145422,
+    "k2_disc_nyquist": 16.0,
+    "face_weight": 10.589962831015145,
+    "edge_weight": 13.216687557676408,
+    "corner_weight": 6.348906401937786,
+    "amplification": 1.239573799316146
+  },
+  "critical_line": {
+    "formula": "γ_c(β) = (k²_disc + β) / |C(k_Nyquist)| = (16.0 + β) / 37.3800",
+    "gamma_c_06": 0.4440872948001142,
+    "gamma_c_02": 0.4333863961302319,
+    "gamma_c_20": 0.48154044014470215,
+    "local_vs_nonlocal_ratio_at_06": 4.25483013185563
+  },
   "physical_params": {
     "layer_params": {
       "1": {
@@ -44,16 +72,23 @@
     "D_tilde": 1.0,
     "gamma_tilde": 1.0370285678025433e-07,
     "beta_tilde": 955.4833936466352,
-    "S_tilde": 1.0
+    "S_tilde": 1.0,
+    "Pi1": 1.0853444180172384e-10,
+    "Pi2": 0.0010465906646304605,
+    "Pi3": 0.0011940330050547257,
+    "Pi4": 0.0010465906646304605,
+    "Pi5": 1.0853444180172384e-10
   },
-  "control_parameters": {
-    "Pi1_gamma_beta": 1.0853444180172384e-10,
-    "Pi2_nonlinear_drive": 1.1359113358056221e-13,
-    "Pi3_spatial_resolution": 0.31138840091099607
-  },
-  "key_insight": {
-    "feedback_amplification_factor": 57857615.36650779,
-    "description": "Effective gamma ~ 10^6 x physical gamma due to positive feedback loop"
+  "feedback_amplification": {
+    "factor": 57857615.36650779,
+    "physical_gamma": 1.0370285678025433e-07,
+    "effective_gamma": 6.0,
+    "mechanism": "Cooperative beam-forming cascade: beam gain × satellite cooperation × multi-hop relay",
+    "analogies": [
+      "cAMP amplification in Dictyostelium (10⁴-10⁶×)",
+      "Effective mass renormalization in condensed matter",
+      "Avalanche photodiode gain"
+    ]
   },
   "layer_by_layer": [
     {
@@ -96,9 +131,5 @@
       "D_km2_s": 14217.467855296398,
       "gamma_phys": 0.9743714129006941
     }
-  ],
-  "predicted_critical_condition": {
-    "gamma_c_beta_c_estimate": "~ 1/phi_0",
-    "note": "Exact value from Dimension 2 (linear stability)"
-  }
+  ]
 }

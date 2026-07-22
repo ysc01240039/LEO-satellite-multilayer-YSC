@@ -1,11 +1,11 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "description": "Real orbit data validation — comparing real satellite positions with Fibonacci sphere",
   "parameters": {
     "seed": 42,
     "target_frac": 0.25,
-    "gamma_opt": 0.17771877391810023,
-    "n_predicted_cores": 250.0,
+    "gamma_opt": 0.444,
+    "n_predicted_cores": 92.3,
     "N_real": 1000,
     "N_fibonacci": 1000,
     "layer_heights_km": [
@@ -16,7 +16,7 @@
       1700.0
     ],
     "n_ground_stations": 20,
-    "GAMMA_SCALE": 13.6,
+    "GAMMA_SCALE": 3.69,
     "phase_diagram": {
       "n_baseline": 91.6,
       "n_grid_max": 123.1,
@@ -24,6 +24,7 @@
       "REF_N": 400
     }
   },
+  "regeneration_note": "Parameters updated to match common_utils.py v25 (GAMMA_SCALE=3.69, gamma_opt=gamma_c_06=0.444, n_predicted=92.3). The CBDP benchmark results (cbdp_v2, cbdp_v3) below were computed with the previous GAMMA_SCALE=13.6 and need regeneration with the current GAMMA_SCALE=3.69 to ensure consistency. Non-CBDP results (greedy, roundrobin, nearest3, shortestpath) are independent of GAMMA_SCALE and remain valid.",
   "real_orbit": {
     "N": 1000,
     "layers": {

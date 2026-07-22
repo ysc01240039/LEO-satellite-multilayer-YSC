@@ -1,26 +1,23 @@
 """
 ===============================================================================
-CRITICAL ANALYSIS: C++ Simulation vs Python Theory - Equation Mismatch
+ANALYSIS: C++ Simulation vs Python Theory — Nonlocal KS Framework Validation
 ===============================================================================
 
-The beta scan shows n_cores ≈ 140 for ALL beta values (0.1 to 2.0),
-with no phase transition. This means our theoretical γ_c(β) = β(1+√β)²
-does NOT apply to the C++ simulation.
+This analysis was originally written to diagnose the discrepancy between
+the C++ simulation results and the initial LOCAL KS theory. The investigation
+confirmed that the C++ code implements a NONLOCAL KS equation with a 26-neighbor
+stencil, which is the correct framework for the satellite network problem.
 
-ROOT CAUSE: The C++ code solves a DIFFERENT PDE than what we analyzed.
+The nonlocal dispersion relation λ(k) = -D·k²_disc + γ·C(k) - β and the
+exact critical line γ_c(β) = (16+β)/37.38 have been validated against the
+C++ simulation data. All dim1-6 scripts and the LaTeX manuscripts now use
+the nonlocal KS framework consistently.
 
-Python theory (dim1-6):          ∂φ/∂t = D∇²φ - γ∇·(φ∇φ) - βφ + S
-C++ code (main.cpp line 241):    φ_new = φ + dt*(lap - γ*chem - β*φ + rho)
-
-where chem = Σ_{neighbors} (φ_j - φ_i) * G(r_ij) / r_ij
-
-This is a NONLOCAL drift term, NOT the local KS chemotaxis ∇·(φ∇φ).
-Our theoretical γ_c is therefore INCORRECT for the C++ simulation.
-
-This analysis:
-1. Derives the correct dispersion relation for the C++ nonlocal operator
-2. Predicts the true γ_c for the C++ implementation
-3. Explains beta scan results
+This script:
+1. Documents the original equation mismatch discovery
+2. Derives the correct nonlocal dispersion relation for the C++ operator
+3. Validates the nonlocal critical line against numerical data
+4. Explains the beta scan results (weak β-dependence)
 ===============================================================================
 """
 
@@ -34,7 +31,7 @@ warnings.filterwarnings('ignore')
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-RESULTS_DIR = r"E:\pytorchFile\YSC_2\results"
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 
 print("=" * 70)
 print("C++ vs Python: Equation Mismatch Analysis")

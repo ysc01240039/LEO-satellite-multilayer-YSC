@@ -12,8 +12,8 @@ from scipy.ndimage import uniform_filter
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-WORK_DIR = r"E:\pytorchFile\YSC_2"
-EXE_PATH = r"E:\pytorchFile\YSC_2\Project\Project\multilayer_sim_real_uniform.exe"
+WORK_DIR = os.path.dirname(os.path.abspath(__file__))
+EXE_PATH = os.path.join(WORK_DIR, "Project", "Project", "multilayer_sim_real_uniform.exe")
 RESULTS_DIR = os.path.join(WORK_DIR, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -36,7 +36,7 @@ def compute_radial_power_spectrum(phi, dx=0.5):
     
     # 3D FFT
     phi_hat = np.fft.fftn(phi_centered)
-    power = np.abs(phi_hat)**2 / (res**3)
+    power = np.abs(phi_hat)**2 / (res**3)  # Parseval: 3D P(k) = |φ_hat|² / N, N = res³
     
     # Frequency grid
     freqs = np.fft.fftfreq(res, d=dx)

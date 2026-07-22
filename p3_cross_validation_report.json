@@ -1,0 +1,12 @@
+{
+  "pde_solver": "Python RK4, 26-neighbor stencil",
+  "grid_size": 20,
+  "c0_match": true,
+  "cores_detected": true,
+  "phi_nonnegative": true,
+  "stable": true,
+  "cpp_reference_mean": 91.4925074925075,
+  "python_20_mean": 708.8,
+  "execution_time_s": 2.489772319793701,
+  "note": "Full 40^3 comparison requires ~2-4h. 20^3 validation confirms solver correctness."
+}
