@@ -36,6 +36,9 @@ struct Params {
     double D = 1.0;       // diffusion coefficient (D=1 after non-dimensionalization t → Dt/L²)
     int grid_res = 40;
     int n_sats = 1000;
+    int n_gs_iters = 5;    // number of Jacobi iterations for implicit diffusion solve (IMEX scheme)
+    double phi_max = 1e10; // saturation ceiling (set very high; nonlinear damping via kappa is primary stabilization)
+    double kappa = 0.01;   // nonlinear damping coefficient (κφ² term prevents blow-up at high φ while preserving dynamics at low φ)
     int rho_update_interval = 20;
     int payload_update_interval = 10;
     int save_interval = 1800;
@@ -63,6 +66,10 @@ void loadParamsFromEnv(Params& p) {
     p.gamma = getEnvDouble("SIM_GAMMA", p.gamma);
     p.beta = getEnvDouble("SIM_BETA", p.beta);
     p.duration_hours = getEnvDouble("SIM_DURATION", p.duration_hours);
+    p.dt = getEnvDouble("SIM_DT", p.dt);
+    p.n_gs_iters = getEnvInt("SIM_GS_ITERS", p.n_gs_iters);
+    p.phi_max = getEnvDouble("SIM_PHI_MAX", p.phi_max);
+    p.kappa = getEnvDouble("SIM_KAPPA", p.kappa);
     p.n_sats = getEnvInt("SIM_N_SATS", p.n_sats);
     p.grid_res = getEnvInt("SIM_GRID_RES", p.grid_res);
 }
@@ -129,10 +136,15 @@ int main() {
 
     std::cout << "Parameters: gamma=" << p.gamma << ", beta=" << p.beta
               << ", n_sats=" << p.n_sats << ", duration=" << p.duration_hours << "h"
+              << ", dt=" << p.dt << ", gs_iters=" << p.n_gs_iters
+              << ", phi_max=" << p.phi_max << ", kappa=" << p.kappa
               << ", uniform=" << uniform_source << std::endl;
 
     std::random_device rd;
-    std::mt19937 rng(rd());
+    // Use SIM_SEED env var for reproducible/different seeds; 
+    // on MinGW/Windows, std::random_device is deterministic, so SIM_SEED is essential
+    int seed = getEnvInt("SIM_SEED", -1);
+    std::mt19937 rng(seed >= 0 ? static_cast<unsigned>(seed) : rd());
     std::uniform_real_distribution<double> dist01(0.0, 1.0);
 
     double sigma = p.sigma_km / p.L_ref;
@@ -192,6 +204,23 @@ int main() {
     std::vector<std::vector<double>> final_cores_x, final_cores_y, final_cores_z, final_cores_peak;
     std::vector<double> phi_final;  // preserved for post-loop output
 
+    // === phi field MUST persist across timesteps for PDE evolution ===
+    // Previously declared inside the while loop (line 221), causing phi to be
+    // re-initialized to zero every iteration. This meant the KS dynamics was
+    // never solved — phi was always just dt*rho. Fixed 2026-07-25.
+    std::vector<double> phi(res*res*res, 0.0);
+
+    // Initialize phi perturbation for uniform source (once, before loop)
+    if (uniform_source) {
+        #pragma omp parallel for
+        for (int idx = 0; idx < res*res*res; ++idx) {
+            int x = idx / (res * res);
+            int y = (idx / res) % res;
+            int z = idx % res;
+            phi[idx] = 0.01 * std::sin(0.5 * (x + 2*y + 3*z));
+        }
+    }
+
     auto start_time = std::chrono::high_resolution_clock::now();
 
     while (t < duration) {
@@ -215,19 +244,13 @@ int main() {
         }
 
         std::vector<double> rho(res*res*res, 0.0);
-        std::vector<double> phi(res*res*res, 0.0);
 
         if (uniform_source) {
-            // Uniform source with deterministic noise to seed Turing instability
+            // Uniform source — phi perturbation initialized once before loop
             double uniform_rho = 2.0;
             #pragma omp parallel for
             for (int idx = 0; idx < res*res*res; ++idx) {
                 rho[idx] = uniform_rho;
-                // Deterministic perturbation: sin-based, amplitude 0.01
-                int x = idx / (res * res);
-                int y = (idx / res) % res;
-                int z = idx % res;
-                phi[idx] = 0.01 * std::sin(0.5 * (x + 2*y + 3*z));
             }
         } else {
             for (const auto& sat : sats) {
@@ -241,29 +264,14 @@ int main() {
             }
         }
 
-        std::vector<double> phi_new = phi;
+        // ===== IMEX Scheme: Explicit chemotaxis + Implicit diffusion (Jacobi) =====
+        // Step 1: Compute chemotaxis term for all grid points (explicit, using current phi)
+        std::vector<double> chem_arr(res*res*res, 0.0);
         #pragma omp parallel for
         for (int idx = 0; idx < res*res*res; ++idx) {
             int x = idx / (res * res);
             int y = (idx / res) % res;
             int z = idx % res;
-
-            // Neumann (zero-flux) boundary conditions — 2nd order extrapolation
-            // Ghost point: φ[-1] = φ[1] (not φ[0]) for O(dx²) accuracy
-            int xp = (x + 1 < res) ? x + 1 : (x - 1);
-            int xm = (x - 1 >= 0) ? x - 1 : (x + 1);
-            int yp = (y + 1 < res) ? y + 1 : (y - 1);
-            int ym = (y - 1 >= 0) ? y - 1 : (y + 1);
-            int zp = (z + 1 < res) ? z + 1 : (z - 1);
-            int zm = (z - 1 >= 0) ? z - 1 : (z + 1);
-
-            double lap = (phi[xp * res * res + y * res + z]
-                        + phi[xm * res * res + y * res + z]
-                        + phi[x * res * res + yp * res + z]
-                        + phi[x * res * res + ym * res + z]
-                        + phi[x * res * res + y * res + zp]
-                        + phi[x * res * res + y * res + zm]
-                        - 6.0 * phi[idx]) / (dx * dx);
 
             double chem = 0.0;
             for (int xx = -1; xx <= 1; ++xx) {
@@ -273,41 +281,78 @@ int main() {
                         int nx = x + xx;
                         int ny = y + yy;
                         int nz = z + zz;
-                        // Neumann (reflection) BC for nonlocal operator — consistent with Laplacian BC
                         if (nx < 0) nx = -nx; else if (nx >= res) nx = 2*res - 2 - nx;
                         if (ny < 0) ny = -ny; else if (ny >= res) ny = 2*res - 2 - ny;
                         if (nz < 0) nz = -nz; else if (nz >= res) nz = 2*res - 2 - nz;
-                        // Clamp after reflection (for rare cases where reflection goes out of bounds)
                         nx = std::max(0, std::min(res-1, nx));
                         ny = std::max(0, std::min(res-1, ny));
                         nz = std::max(0, std::min(res-1, nz));
                         int nidx = nx * res * res + ny * res + nz;
                         double dr = std::sqrt(static_cast<double>(xx*xx + yy*yy + zz*zz)) * dx;
-                        // Note: The 26-neighbor stencil sum directly approximates the
-                        // continuum integral without dx^3 factor (verified numerically:
-                        // chem/N_cont = 0.98 for Gaussian test function). This is because
-                        // the stencil is a sparse sampling, not a Riemann sum quadrature.
-                        // The linear stability analysis should use the discrete dispersion
-                        // relation: lambda(k) = -k2_disc(k) + gamma*C(k) - beta.
-                        // For the 1D Nyquist mode (k=(pi/dx,0,0), most unstable):
-                        //   k2_disc = 16.0, |C(k_Nyquist)| = 37.38
-                        //   gamma_c(beta=0.6) = (16+0.6)/37.38 = 0.444
-                        //   gamma=6.0 >> gamma_c => deeply in ordered phase.
                         chem += (phi[nidx] - phi[idx]) * gaussian(dr, sigma) / dr;
                     }
                 }
             }
-            // Forward Euler time integration: φ^{n+1} = φ^n + dt·(D∇²φ - γ·N[φ] - βφ + ρ)
-            // The projection φ ≥ 0 (next line) is monotone and preserves the descent
-            // property in the weak sense: dF/dt ≤ 0 for the unconstrained step, and
-            // the projection onto the convex set {φ ≥ 0} does not increase F.
-            // For dt = 0.004, the discrete gradient flow with projection satisfies
-            // the monotone energy decrease condition established in the H-theorem.
-            phi_new[idx] = phi[idx] + p.dt * (p.D * lap - p.gamma * chem - p.beta * phi[idx] + rho[idx]);
-            phi_new[idx] = std::max(0.0, phi_new[idx]);
+            chem_arr[idx] = chem;
         }
-        phi.swap(phi_new);
 
+        // Step 2: Explicit update (chemotaxis + nonlinear damping + source)
+        std::vector<double> phi_explicit(res*res*res);
+        #pragma omp parallel for
+        for (int idx = 0; idx < res*res*res; ++idx) {
+            double phi_star = phi[idx] + p.dt * (
+                - p.gamma * chem_arr[idx] * std::max(0.0, 1.0 - phi[idx] / p.phi_max)
+                - p.kappa * phi[idx] * phi[idx]
+                + rho[idx]
+            );
+            phi_explicit[idx] = std::max(0.0, phi_star);
+        }
+
+        // Step 3: Implicit diffusion + linear decay (Jacobi iteration)
+        // Solve: (I - dt*D*∇² + dt*β) φ_new = φ_explicit
+        double diag = 1.0 + p.dt * p.beta + 6.0 * p.dt * p.D / (dx * dx);
+        double off_diag = p.dt * p.D / (dx * dx);
+
+        std::vector<double> phi_old = phi_explicit;
+        std::vector<double> phi_new_jacobi(res*res*res);
+
+        for (int iter = 0; iter < p.n_gs_iters; ++iter) {
+            #pragma omp parallel for
+            for (int idx = 0; idx < res*res*res; ++idx) {
+                int x = idx / (res * res);
+                int y = (idx / res) % res;
+                int z = idx % res;
+
+                // Neumann (zero-flux) boundary conditions
+                int xp = (x + 1 < res) ? x + 1 : (x - 1);
+                int xm = (x - 1 >= 0) ? x - 1 : (x + 1);
+                int yp = (y + 1 < res) ? y + 1 : (y - 1);
+                int ym = (y - 1 >= 0) ? y - 1 : (y + 1);
+                int zp = (z + 1 < res) ? z + 1 : (z - 1);
+                int zm = (z - 1 >= 0) ? z - 1 : (z + 1);
+
+                double neighbor_sum = phi_old[xp * res * res + y * res + z]
+                                    + phi_old[xm * res * res + y * res + z]
+                                    + phi_old[x * res * res + yp * res + z]
+                                    + phi_old[x * res * res + ym * res + z]
+                                    + phi_old[x * res * res + y * res + zp]
+                                    + phi_old[x * res * res + y * res + zm];
+
+                phi_new_jacobi[idx] = (phi_explicit[idx] + off_diag * neighbor_sum) / diag;
+            }
+            phi_old.swap(phi_new_jacobi);
+        }
+        phi.swap(phi_old);  // final result after Jacobi iterations
+
+        // Enforce positivity after Jacobi solve (not inside iterations, to avoid
+        // nonlinear modification of the linear solver)
+        #pragma omp parallel for
+        for (int idx = 0; idx < res*res*res; ++idx) {
+            if (phi[idx] < 0.0) phi[idx] = 0.0;
+        }
+
+        // ===== Analysis: only compute when saving (was ~99.9% wasted computation) =====
+        if (step % p.save_interval == 0) {
         std::vector<int> assignments(res*res*res, -1);
         int core_id = 0;
         double max_phi = *std::max_element(phi.begin(), phi.end());
@@ -318,9 +363,9 @@ int main() {
         std::vector<double> core_x_sum, core_y_sum, core_z_sum;
         std::vector<double> core_phi_sum;
 
-        for (int x = 1; x < res-1; ++x) {
-            for (int y = 1; y < res-1; ++y) {
-                for (int z = 1; z < res-1; ++z) {
+        for (int x = 0; x < res; ++x) {
+            for (int y = 0; y < res; ++y) {
+                for (int z = 0; z < res; ++z) {
                     int idx = x * res * res + y * res + z;
                     if (phi[idx] > threshold && assignments[idx] == -1) {
                         std::vector<std::tuple<int, int, int>> stack;
@@ -426,33 +471,33 @@ int main() {
         }
         order /= (p.n_sats * p.n_sats);
 
-        if (step % p.save_interval == 0) {
-            times.push_back(t);
-            n_cores_hist.push_back(core_id);
-            n_links_hist.push_back(n_links);
-            isolated_hist.push_back(n_isolated);
-            order_hist.push_back(static_cast<int>(order * 1000));
-            std::vector<double> step_core_x, step_core_y, step_core_z, step_core_peak;
-            for (int c = 0; c < core_id; ++c) {
-                double cx = core_phi_sum[c] > 0 ? core_x_sum[c] / core_phi_sum[c] : 0.0;
-                double cy = core_phi_sum[c] > 0 ? core_y_sum[c] / core_phi_sum[c] : 0.0;
-                double cz = core_phi_sum[c] > 0 ? core_z_sum[c] / core_phi_sum[c] : 0.0;
-                step_core_x.push_back(cx);
-                step_core_y.push_back(cy);
-                step_core_z.push_back(cz);
-                step_core_peak.push_back(core_phi[c]);
-            }
-            final_cores_x.push_back(step_core_x);
-            final_cores_y.push_back(step_core_y);
-            final_cores_z.push_back(step_core_z);
-            final_cores_peak.push_back(step_core_peak);
-            std::cout << "t=" << t << ", cores=" << core_id << ", links=" << n_links << ", isolated=" << n_isolated << ", order=" << order << std::endl;
+        times.push_back(t);
+        n_cores_hist.push_back(core_id);
+        n_links_hist.push_back(n_links);
+        isolated_hist.push_back(n_isolated);
+        order_hist.push_back(static_cast<int>(order * 1000));
+        std::vector<double> step_core_x, step_core_y, step_core_z, step_core_peak;
+        for (int c = 0; c < core_id; ++c) {
+            double cx = core_phi_sum[c] > 0 ? core_x_sum[c] / core_phi_sum[c] : 0.0;
+            double cy = core_phi_sum[c] > 0 ? core_y_sum[c] / core_phi_sum[c] : 0.0;
+            double cz = core_phi_sum[c] > 0 ? core_z_sum[c] / core_phi_sum[c] : 0.0;
+            step_core_x.push_back(cx);
+            step_core_y.push_back(cy);
+            step_core_z.push_back(cz);
+            step_core_peak.push_back(core_phi[c]);
         }
+        final_cores_x.push_back(step_core_x);
+        final_cores_y.push_back(step_core_y);
+        final_cores_z.push_back(step_core_z);
+        final_cores_peak.push_back(step_core_peak);
+        std::cout << "t=" << t << ", cores=" << core_id << ", links=" << n_links << ", isolated=" << n_isolated << ", order=" << order << std::endl;
+        }  // end if (step % p.save_interval == 0)
 
         t += p.dt;
         step++;
-        phi_final = phi;  // preserve for post-loop Fourier output
     }
+
+    phi_final = phi;  // preserve for post-loop Fourier output (only once, not every step)
 
     auto end_time = std::chrono::high_resolution_clock::now();
     double total_elapsed = std::chrono::duration<double>(end_time - start_time).count();
@@ -468,11 +513,15 @@ int main() {
         std::cout << "Phi field saved: phi_field.bin (" << n_cells << " cells)" << std::endl;
     }
 
-    std::ofstream out("multilayer_results_real.json");
+    const char* out_filename = std::getenv("SIM_OUTPUT");
+    std::string out_name = out_filename ? out_filename : "multilayer_results_real.json";
+    std::ofstream out(out_name);
     out << "{\n";
     out << "  \"gamma\": " << p.gamma << ",\n";
     out << "  \"beta\": " << p.beta << ",\n";
     out << "  \"n_sats\": " << p.n_sats << ",\n";
+    out << "  \"seed\": " << seed << ",\n";
+    out << "  \"kappa\": " << p.kappa << ",\n";
     out << "  \"avg_cores\": " << std::accumulate(n_cores_hist.begin(), n_cores_hist.end(), 0.0) / n_cores_hist.size() << ",\n";
     out << "  \"final_cores\": {\n";
     out << "    \"x\": [";
@@ -521,7 +570,7 @@ int main() {
     for (size_t i = 0; i < order_hist.size(); ++i) out << (i ? "," : "") << order_hist[i];
     out << "]\n  }\n}\n";
     out.close();
-    std::cout << "Results saved to multilayer_results_real.json" << std::endl;
+    std::cout << "Results saved to " << out_name << std::endl;
 
     return 0;
 }

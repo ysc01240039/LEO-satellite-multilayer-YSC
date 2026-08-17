@@ -16,6 +16,12 @@ import warnings
 import numpy as np
 from scipy.spatial import cKDTree
 from scipy.ndimage import gaussian_filter, maximum_filter
+from scipy.sparse import csr_matrix
+from scipy.sparse.csgraph import (
+    dijkstra as _cs_dijkstra,
+    connected_components as _cs_components,
+    minimum_spanning_tree as _cs_mst,
+)
 
 # ================================================================
 # Section 0: Constants & Parameters
@@ -131,10 +137,16 @@ def required_gamma_for_core_fraction(fraction):
 # Section 3: Core Detection Helpers
 # ================================================================
 
-def _calibrate_cores(phi, n_target, grid_res, dx, domain_extent, gamma, sat_pos):
+def _calibrate_cores(phi, n_target, grid_res, dx, domain_extent, gamma, sat_pos,
+                     strict=False):
     """
     Adaptive threshold calibration: binary search for ~n_target cores.
     Returns calibrated core positions and count.
+
+    strict=True: hard-cap the result at exactly n_target (top-n_target by
+    density value) so the realized core count tracks the calibration target.
+    Used by the E2E routing benchmark, where core-count variance directly
+    distorts the scalability comparison. Legacy callers use strict=False.
     """
     filter_size = max(2, int(8 - np.log10(max(n_target, 1) + 1) * 2))
     local_max = (phi == maximum_filter(phi, size=filter_size))
@@ -169,7 +181,10 @@ def _calibrate_cores(phi, n_target, grid_res, dx, domain_extent, gamma, sat_pos)
         best_idx = np.argwhere(core_mask)
         best_count = len(best_idx)
 
-    max_cores = max(n_target * 3, 10)
+    if strict:
+        max_cores = n_target
+    else:
+        max_cores = max(n_target * 3, 10)
     if best_count > max_cores:
         core_vals = phi[best_idx[:, 0], best_idx[:, 1], best_idx[:, 2]]
         top_idx = np.argsort(core_vals)[-max_cores:]
@@ -183,17 +198,24 @@ def _calibrate_cores(phi, n_target, grid_res, dx, domain_extent, gamma, sat_pos)
     return core_positions, best_count
 
 
-def _detect_cores(sat_pos, gamma, N, sat_weight=None):
+def _detect_cores(sat_pos, gamma, N, sat_weight=None, n_target=None, strict=False):
     """Detect cores using gamma-controlled density field. Returns cache dict.
-    
+
     Args:
         sat_pos: satellite positions (N, 3)
         gamma: PDE gamma parameter (only affects smoothing scale, NOT core count)
         N: number of satellites
         sat_weight: optional per-satellite weight for density field (default: uniform)
+        n_target: target core count for calibration. If None, uses the legacy
+            constant 93 (Round 22: n_cores ~93 at N=1000). Callers that need
+            N-dependent core counts should pass the C++ N-scan power law
+            n = 478.4 * N^(-0.2348), e.g. via _detect_cores_powerlaw().
+        strict: if True, hard-cap the realized core count at n_target
+            (forwarded to _calibrate_cores). Default False (legacy behavior).
     """
-    n_target = 93  # Round 22: n_cores is CONSTANT (~93), independent of gamma and N
-    n_target = max(n_target, 3)
+    if n_target is None:
+        n_target = 93  # legacy constant (calibrated at N=1000)
+    n_target = max(int(n_target), 3)
     grid_res = max(6, min(120, int(np.sqrt(N * 5.0))))
     domain_extent = np.max(np.abs(sat_pos)) * 1.2
     dx = 2 * domain_extent / grid_res
@@ -211,7 +233,9 @@ def _detect_cores(sat_pos, gamma, N, sat_weight=None):
     sigma_smooth = max(0.5, 2.0 * np.exp(-gamma_eff / 5.0))
     phi = gaussian_filter(phi, sigma=sigma_smooth)
 
-    core_positions, n_cores_real = _calibrate_cores(phi, n_target, grid_res, dx, domain_extent, gamma_eff, sat_pos)
+    core_positions, n_cores_real = _calibrate_cores(
+        phi, n_target, grid_res, dx, domain_extent, gamma_eff, sat_pos,
+        strict=strict)
     core_tree = cKDTree(core_positions)
     sat_core = np.full(N, -1)
     for i in range(N):
@@ -869,6 +893,508 @@ def benchmark_distributed_multipath(sat_pos, gs_pos, gs_demand, max_link_range_k
         'max_load': load.max(),
         'n_paths': n_paths,
         'routing_type': 'distributed_multipath',
+    }
+
+
+# ================================================================
+# Section 7b: End-to-End (E2E) Routing Benchmark Engine
+# ================================================================
+# Motivation:
+#   Sections 5-7 measure access-layer assignment only (ground-to-satellite
+#   distance, serving load). The paper's Algorithm 2 and the ns-3 packet-level
+#   implementation (paper/ns3/leo_cbdp_eval.cc, InstallCbdpRoutes) route
+#   traffic end-to-end over the ISL graph via SNC portals. This section
+#   implements the missing end-to-end evaluation used for the scalability
+#   comparison against recent routing methods (PFNSAR, LPIH) under one shared
+#   topology, flow model, and metric convention.
+#
+# Unified conventions (identical for every method):
+#   Topology: ISL graph = Kruskal MST (connectivity backbone) union the
+#     4 nearest neighbors per satellite, mirroring BuildISLEdges in
+#     leo_cbdp_eval.cc.
+#   Flows: all ordered GS pairs (i -> j); source demand d_i is split equally
+#     over the M-1 destinations (same all-pairs model as the ns-3 evaluation:
+#     20 ground stations -> 380 flows).
+#   Path: GS_i -> ingress satellite(s) -> ISL path -> egress satellite
+#     (nearest satellite of GS_j) -> GS_j.
+#   avg_dist_km: demand-weighted mean end-to-end path length (km).
+#   load / imbalance / n_used: serving-load semantics identical to Section 5
+#     (demand counted at the ingress satellite), so numbers stay comparable
+#     with the access-layer benchmark. Transit-inclusive carried load is
+#     recorded separately (max_carried / mean_carried diagnostics).
+#   overhead_bytes_per_cycle: analytical control-traffic volume per 15 s
+#     reconfiguration cycle; CBDP message sizes from leo_cbdp_eval.cc.
+
+E2E_LOAD_REPORT_BYTES = 64    # load report (member -> portal)
+E2E_ROUTE_DIST_BYTES = 128    # routing table distribution (portal -> member)
+E2E_CORE_ASSIGN_BYTES = 32    # assignment confirmation (portal -> member)
+E2E_MESH_UPDATE_BYTES = 256   # SNC mesh update (portal <-> portal)
+E2E_K_MESH = 6                # k_c mesh degree
+E2E_T_RECONFIG_S = 15.0       # reconfiguration period (s)
+
+
+def _build_isl_graph_e2e(sat_pos, k_nn=4, k_cand=12):
+    """Symmetric ISL graph mirroring BuildISLEdges in leo_cbdp_eval.cc.
+
+    Kruskal MST over a k_cand-nearest candidate graph (connectivity backbone)
+    union the k_nn nearest neighbors per satellite. Edge weights are Euclidean
+    distances (km). The MST of a 12-NN candidate graph coincides with the
+    all-pairs MST for geometric point sets in practice.
+    """
+    N = len(sat_pos)
+    tree = cKDTree(sat_pos)
+
+    # candidate graph for MST: symmetrized k_cand-NN
+    kc = min(k_cand + 1, N)
+    d_c, i_c = tree.query(sat_pos, k=kc)
+    rows, cols, data = [], [], []
+    for u in range(N):
+        for v, w in zip(np.atleast_1d(i_c[u]), np.atleast_1d(d_c[u])):
+            if v == u:
+                continue
+            rows.append(u)
+            cols.append(int(v))
+            data.append(float(w))
+    cand = csr_matrix((data, (rows, cols)), shape=(N, N))
+    n_comp, _ = _cs_components(cand, directed=False)
+    if n_comp != 1:
+        raise RuntimeError(f"E2E ISL candidate graph disconnected ({n_comp} components)")
+    mst = _cs_mst(cand).tocoo()
+
+    edges = {}
+    for a, b, w in zip(mst.row, mst.col, mst.data):
+        key = (min(int(a), int(b)), max(int(a), int(b)))
+        edges[key] = float(w)
+
+    # k_nn nearest neighbors per satellite (as in BuildISLEdges)
+    kn = min(k_nn + 1, N)
+    d_n, i_n = tree.query(sat_pos, k=kn)
+    for u in range(N):
+        for v, w in zip(np.atleast_1d(i_n[u]), np.atleast_1d(d_n[u])):
+            if v == u:
+                continue
+            key = (min(u, int(v)), max(u, int(v)))
+            if key not in edges:
+                edges[key] = float(w)
+
+    adj = [[] for _ in range(N)]
+    for (a, b), w in edges.items():
+        adj[a].append((b, w))
+        adj[b].append((a, w))
+    return adj
+
+
+def _adj_to_csr(adj):
+    """Adjacency list -> CSR matrix for scipy.sparse.csgraph."""
+    N = len(adj)
+    indptr = [0]
+    indices, data = [], []
+    for u in range(N):
+        for v, w in adj[u]:
+            indices.append(v)
+            data.append(w)
+        indptr.append(len(indices))
+    return csr_matrix((data, indices, indptr), shape=(N, N))
+
+
+def _spt_unique(csr, roots):
+    """Multi-source Dijkstra with duplicate-root handling.
+
+    Returns (dist, pred) with one row per entry of `roots` (duplicate roots
+    are computed once and expanded back).
+    """
+    roots = np.asarray(roots, dtype=int)
+    uniq, inv = np.unique(roots, return_inverse=True)
+    dist_u, pred_u = _cs_dijkstra(csr, directed=False, indices=uniq,
+                                  return_predecessors=True)
+    return dist_u[inv], pred_u[inv]
+
+
+def _walk_to_root(pred_row, u):
+    """Node list from u up to (and including) the SPT root.
+
+    pred_row follows the scipy.csgraph predecessor convention (-9999 at the
+    root and for unreachable nodes).
+    """
+    path = [int(u)]
+    x = int(u)
+    limit = len(pred_row)
+    while True:
+        p = int(pred_row[x])
+        if p < 0 or p == x:
+            break
+        path.append(p)
+        x = p
+        if len(path) > limit:  # safety against malformed chains
+            break
+    return path
+
+
+def _detect_cores_powerlaw(sat_pos, gamma, N):
+    """Core detection with n_cores from the C++ N-scan calibration.
+
+    n_target = round(478.4 * N^(-0.2348))  (R^2 = 0.9953, C++ N=200..1000),
+    capped to [3, N//3] so that the routing hierarchy remains feasible at
+    small constellation sizes.
+    """
+    n_target = int(round(478.4 * N ** (-0.2348)))
+    n_target = max(3, min(N // 3, n_target))
+    return _detect_cores(sat_pos, gamma, N, n_target=n_target, strict=True)
+
+
+def _kmeans_seeded(pos, k, seed, n_iter=15):
+    """Deterministic k-means with k-means++ initialization (fixed seed)."""
+    rng = np.random.RandomState(seed)
+    N = len(pos)
+    centroids = [pos[rng.randint(N)]]
+    for _ in range(k - 1):
+        d2 = np.min(((pos[:, None, :] - np.asarray(centroids)[None]) ** 2).sum(-1), axis=1)
+        probs = d2 / max(d2.sum(), 1e-12)
+        centroids.append(pos[rng.choice(N, p=probs)])
+    centroids = np.asarray(centroids)
+    labels = np.full(N, -1)
+    for _ in range(n_iter):
+        d = ((pos[:, None, :] - centroids[None]) ** 2).sum(-1)
+        new_labels = np.argmin(d, axis=1)
+        if np.array_equal(new_labels, labels):
+            break
+        labels = new_labels
+        for c in range(k):
+            m = labels == c
+            if m.any():
+                centroids[c] = pos[m].mean(axis=0)
+    return labels, centroids
+
+
+def benchmark_e2e_all(sat_pos, gs_pos, gs_demand, gamma=1.0, k_spread=5, seed=42):
+    """Run all end-to-end routing methods on shared topology precomputation.
+
+    Methods:
+        dijkstra    centralized shortest-path oracle (performance upper bound)
+        greedy      least-loaded of 5 nearest access satellites + SP transit
+        nearest3    3 nearest access satellites (equal split) + SP transit
+        roundrobin  3-unit demand chunks in global rotation + SP transit
+        cbdp        proposed (paper Algorithm 2): nearest SNC, intra-core
+                    top-k_spread spread, portal relay over the ISL graph
+                    (aligned with InstallCbdpRoutes in leo_cbdp_eval.cc)
+        pfnsar      potential-field network-state-aware routing (adapted from
+                    Wei et al. 2025 TCOM): state-aware access (5 nearest
+                    candidates, min access range + beta*carried) plus per-flow
+                    greedy descent on phi = dist_to_sink + beta * carried_load,
+                    online updates
+        lpih        hierarchical logic-path routing (adapted from Yan et al.
+                    2024): k-means domains, gateway logic topology (MST +
+                    4-NN over inter-gateway SP distances), gateway relay
+
+    Returns:
+        dict with topology summary and per-method metric dicts.
+    """
+    N = len(sat_pos)
+    M = len(gs_pos)
+    gs_demand = np.asarray(gs_demand, dtype=float)
+    total_demand = float(gs_demand.sum())
+
+    # ---------------- shared ISL topology ----------------
+    adj = _build_isl_graph_e2e(sat_pos)
+    csr = _adj_to_csr(adj)
+    n_edges_dir = sum(len(a) for a in adj)
+    deg_avg = n_edges_dir / N
+    logN = max(np.log2(N), 1.0)
+
+    sat_tree = cKDTree(sat_pos)
+    d_gs_sat, gs_sat = sat_tree.query(gs_pos)  # egress satellite per GS
+    gs_sat = np.atleast_1d(gs_sat).astype(int)
+    d_gs_sat = np.atleast_1d(d_gs_sat)
+
+    k_cand = min(8, N)
+    knn_d, knn_i = sat_tree.query(gs_pos, k=k_cand)
+    knn_d = np.atleast_2d(knn_d)
+    knn_i = np.atleast_2d(knn_i)
+
+    # SPTs rooted at each egress satellite (shared by all methods)
+    distM, predM = _spt_unique(csr, gs_sat)  # (M, N)
+
+    # edge-weight lookup for path-length accumulation
+    wmap = {}
+    for u in range(N):
+        for v, w in adj[u]:
+            wmap[(u, v)] = w
+
+    dsts = [[l for l in range(M) if l != j] for j in range(M)]
+
+    # ---------------- ingress policies ----------------
+    ingress = {}
+    for j in range(M):
+        ingress[('dijkstra', j)] = [(int(knn_i[j, 0]), 1.0)]
+        ingress[('lpih', j)] = [(int(knn_i[j, 0]), 1.0)]
+        k3 = min(3, N)
+        ingress[('nearest3', j)] = [(int(knn_i[j, t]), 1.0 / k3) for t in range(k3)]
+
+    # greedy: least-loaded among 5 nearest, GSs processed in order
+    load_tmp = np.zeros(N)
+    for j in range(M):
+        k5 = min(5, N)
+        cand = knn_i[j, :k5]
+        u = int(cand[np.argmin(load_tmp[cand])])
+        load_tmp[u] += gs_demand[j]
+        ingress[('greedy', j)] = [(u, 1.0)]
+
+    # roundrobin: 3-unit chunks assigned to satellites in global rotation
+    CHUNK = 3.0
+    sat_idx = 0
+    for j in range(M):
+        chunks = max(1, int(np.ceil(gs_demand[j] / CHUNK)))
+        agg = {}
+        for _ in range(chunks):
+            u = sat_idx % N
+            agg[u] = agg.get(u, 0.0) + 1.0 / chunks
+            sat_idx += 1
+        ingress[('roundrobin', j)] = sorted(agg.items())
+
+    # ---------------- CBDP: cores, portals, ingress ----------------
+    core_cache = _detect_cores_powerlaw(sat_pos, gamma, N)
+    core_pos = core_cache['core_positions']
+    n_cores = core_cache['n_cores_real']
+    sat_core = core_cache['sat_core']
+    portal = np.zeros(n_cores, dtype=int)
+    for c in range(n_cores):
+        members = np.where(sat_core == c)[0]
+        if len(members) == 0:
+            portal[c] = int(sat_tree.query(core_pos[c])[1])
+        else:
+            d2 = np.linalg.norm(sat_pos[members] - core_pos[c], axis=1)
+            portal[c] = int(members[np.argmin(d2)])
+    distP, predP = _spt_unique(csr, portal)  # (n_cores, N)
+    core_tree = cKDTree(core_pos)
+    for j in range(M):
+        cj = int(core_tree.query(gs_pos[j])[1])
+        members = np.where(sat_core == cj)[0]
+        if len(members) == 0:
+            ingress[('cbdp', j)] = [(int(gs_sat[j]), 1.0)]
+        else:
+            dmem = np.linalg.norm(sat_pos[members] - gs_pos[j], axis=1)
+            order = np.argsort(dmem)[:min(k_spread, len(members))]
+            kk = len(order)
+            ingress[('cbdp', j)] = [(int(members[o]), 1.0 / kk) for o in order]
+
+    # ---------------- LPIH: domains, gateways, logic paths ----------------
+    D = max(2, int(round(np.sqrt(N))))
+    labels, centroids = _kmeans_seeded(sat_pos, D, seed)
+    _, gw = sat_tree.query(centroids)
+    gw = np.atleast_1d(gw).astype(int)
+    distG, predG = _spt_unique(csr, gw)  # (D, N)
+    gw_sp = distG[:, gw].copy()  # (D, D) ISL SP distances between gateways
+    KDOM = min(4, D - 1)
+    mst_dom = _cs_mst(csr_matrix(gw_sp)).tocoo()
+    wmat = np.full((D, D), np.inf)
+    for a, b, w in zip(mst_dom.row, mst_dom.col, mst_dom.data):
+        a, b = int(a), int(b)
+        if w < wmat[a, b]:
+            wmat[a, b] = wmat[b, a] = float(w)
+    for x in range(D):
+        order = np.argsort(gw_sp[x])
+        for y in order[1:KDOM + 1]:
+            w = float(gw_sp[x, y])
+            if np.isfinite(w) and w < wmat[x, y]:
+                wmat[x, y] = wmat[y, x] = w
+    distDom, predDom = _cs_dijkstra(csr_matrix(wmat), directed=False,
+                                    indices=np.arange(D), return_predecessors=True)
+
+    # ---------------- path functions ----------------
+    def sp_path(u, l):
+        return _walk_to_root(predM[l], u)
+
+    def cbdp_path(u, l):
+        """Portal relay aligned with InstallCbdpRoutes: nodes route toward the
+        destination core's portal, then down the egress SPT member path."""
+        eg = int(gs_sat[l])
+        if u == eg:
+            return [u]
+        c_dst = int(sat_core[eg])
+        p = int(portal[c_dst])
+        down = _walk_to_root(predM[l], p)  # portal -> ... -> egress
+        if u in down:  # u already on the portal->egress member path
+            return _walk_to_root(predM[l], u)
+        up = _walk_to_root(predP[c_dst], u)  # member -> ... -> portal
+        if up[-1] != p:  # portal unreachable: SP fallback
+            return _walk_to_root(predM[l], u)
+        return up + down[1:]
+
+    def lpih_path(u, l):
+        """Gateway relay: intra-domain SP to own gateway, logic-path across
+        the domain graph, then down to the egress satellite."""
+        eg = int(gs_sat[l])
+        a = int(labels[u])
+        b = int(labels[eg])
+        if a == b:
+            return _walk_to_root(predM[l], u)
+        seq = _walk_to_root(predDom[a], b)[::-1]  # [a, ..., b]
+        path = _walk_to_root(predG[a], u)  # u -> ... -> gw[a]
+        for x, y in zip(seq[:-1], seq[1:]):
+            seg = _walk_to_root(predG[y], int(gw[x]))  # gw[x] -> gw[y]
+            path += seg[1:] if path[-1] == seg[0] else seg
+        seg = _walk_to_root(predM[l], int(gw[b]))  # gw[b] -> egress
+        path += seg[1:] if path[-1] == seg[0] else seg
+        return path
+
+    # ---------------- generic evaluation ----------------
+    def evaluate(method, path_fn):
+        load = np.zeros(N)
+        carried = np.zeros(N)
+        dist_num = 0.0
+        for j in range(M):
+            w_flow = gs_demand[j] / (M - 1)
+            for u, frac in ingress[(method, j)]:
+                load[u] += gs_demand[j] * frac
+                w_sub = w_flow * frac
+                d_acc = float(np.linalg.norm(gs_pos[j] - sat_pos[u]))
+                for l in dsts[j]:
+                    path = path_fn(u, l)
+                    pl = d_acc + d_gs_sat[l]
+                    carried[u] += w_sub
+                    for a, b in zip(path[:-1], path[1:]):
+                        pl += wmap[(a, b)]
+                        carried[b] += w_sub
+                    dist_num += w_sub * pl
+        return _e2e_metrics(load, carried, dist_num, total_demand)
+
+    def _e2e_metrics(load, carried, dist_num, denom):
+        n_used = int(np.sum(load > 0))
+        pos = load[load > 0]
+        imb = float((load.max() - pos.min()) / max(load.mean(), 1e-6)) if n_used > 0 else 0.0
+        cpos = carried[carried > 0]
+        # total carried load (ingress + transit) imbalance, same convention:
+        # differentiates routing methods whose ingress policies coincide
+        c_imb = float((carried.max() - cpos.min()) / max(carried.mean(), 1e-6)) if len(cpos) else 0.0
+        return {
+            'load': load,
+            'carried': carried,
+            'imbalance': imb,
+            'carried_imbalance': c_imb,
+            'avg_dist_km': float(dist_num / max(denom, 1e-9)),
+            'n_used': n_used,
+            'max_load': float(load.max()),
+            'max_carried': float(carried.max()),
+            'mean_carried': float(cpos.mean()) if len(cpos) else 0.0,
+        }
+
+    # ---------------- PFNSAR: state-aware potential descent ----------------
+    res_dijkstra = evaluate('dijkstra', sp_path)
+    carried_sp = res_dijkstra['carried']
+    sp_carried_pos = carried_sp[carried_sp > 0]
+    mean_carried_sp = float(sp_carried_pos.mean()) if len(sp_carried_pos) else 1.0
+    sp_lens = np.array([distM[l, gs_sat[j]] for j in range(M) for l in dsts[j]])
+    w_flows = np.array([gs_demand[j] / (M - 1) for j in range(M) for l in dsts[j]])
+    mean_isl = float(np.average(sp_lens, weights=w_flows))
+    beta = 0.2 * mean_isl / (2.0 * max(mean_carried_sp, 1e-9))
+
+    def evaluate_pfnsar():
+        load = np.zeros(N)
+        carried = np.zeros(N)
+        dist_num = 0.0
+        k5 = min(5, N)
+        for j in range(M):
+            w_flow = gs_demand[j] / (M - 1)
+            # state-aware access (part of the PFNSAR adaptation): among the 5
+            # nearest visible satellites, attach at the one minimizing the
+            # access potential = access range + beta * current carried load
+            cand = knn_i[j, :k5]
+            u = int(cand[np.argmin(knn_d[j, :k5] + beta * carried[cand])])
+            frac = 1.0
+            load[u] += gs_demand[j] * frac
+            w_sub = w_flow * frac
+            d_acc = float(np.linalg.norm(gs_pos[j] - sat_pos[u]))
+            for l in dsts[j]:
+                target = int(gs_sat[l])
+                x = u
+                path = [x]
+                carried[x] += w_sub
+                visited = {x}
+                while x != target and len(path) <= 4 * N:
+                    nbrs = adj[x]
+                    if not nbrs:
+                        break
+                    vals = [distM[l, y] + beta * carried[y] for y, _ in nbrs]
+                    y = int(nbrs[int(np.argmin(vals))][0])
+                    if y in visited:  # potential loop: fall back to SPT parent
+                        p = int(predM[l, x])
+                        if p < 0 or p in visited:
+                            break
+                        y = p
+                    path.append(y)
+                    visited.add(y)
+                    carried[y] += w_sub
+                    x = y
+                if x != target:  # incomplete: follow the SPT remainder
+                    rem = _walk_to_root(predM[l], x)
+                    for node in rem[1:]:
+                        carried[node] += w_sub
+                    path += rem[1:]
+                pl = d_acc + d_gs_sat[l] + sum(wmap[(a, b)] for a, b in zip(path[:-1], path[1:]))
+                dist_num += w_sub * pl
+        return _e2e_metrics(load, carried, dist_num, total_demand)
+
+    # ---------------- run all methods ----------------
+    res = {
+        'dijkstra': res_dijkstra,
+        'greedy': evaluate('greedy', sp_path),
+        'nearest3': evaluate('nearest3', sp_path),
+        'roundrobin': evaluate('roundrobin', sp_path),
+        'cbdp': evaluate('cbdp', cbdp_path),
+        'pfnsar': evaluate_pfnsar(),
+        'lpih': evaluate('lpih', lpih_path),
+    }
+
+    # ---------------- analytical control overhead and route ops ----------------
+    E = float(n_edges_dir)
+    overhead = {
+        'dijkstra': 0.0,  # centralized: no on-network control traffic
+        'greedy': 0.0,
+        'nearest3': 0.0,
+        'roundrobin': 0.0,
+        # leo_cbdp_eval.cc CbdpControlCycle: load reports + route distribution
+        # + assignment confirmations (member <-> portal) + k_c mesh updates
+        'cbdp': float((N - n_cores) * (E2E_LOAD_REPORT_BYTES + E2E_ROUTE_DIST_BYTES
+                                       + E2E_CORE_ASSIGN_BYTES)
+                      + n_cores * E2E_K_MESH * E2E_MESH_UPDATE_BYTES),
+        'pfnsar': float(N * deg_avg * 64.0),          # potential beacons per cycle
+        'lpih': float(N * deg_avg * 48.0 + D * KDOM * 256.0),  # intra-domain LSA + summaries
+    }
+    route_ops = {
+        'dijkstra': float(N * E * logN),              # global all-pairs SP
+        'greedy': float(M * E * logN),
+        'nearest3': float(M * E * logN),
+        'roundrobin': float(M * E * logN),
+        'cbdp': float(n_cores * E * logN
+                      + n_cores ** 2 * max(np.log2(max(n_cores, 2)), 1.0)),
+        'pfnsar': float(2 * M * E * logN),            # two potential passes
+        'lpih': float(D * E * logN + D ** 2 * max(np.log2(max(D, 2)), 1.0)),
+    }
+
+    methods = {}
+    for name, r in res.items():
+        methods[name] = {
+            'imbalance': r['imbalance'],
+            'carried_imbalance': r['carried_imbalance'],
+            'avg_dist_km': r['avg_dist_km'],
+            'n_used': r['n_used'],
+            'max_load': r['max_load'],
+            'max_carried': r['max_carried'],
+            'mean_carried': r['mean_carried'],
+            'overhead_bytes_per_cycle': overhead[name],
+            'route_ops': route_ops[name],
+        }
+
+    return {
+        'N': N,
+        'M': M,
+        'gamma': gamma,
+        'graph_edges': n_edges_dir // 2,
+        'graph_deg_avg': float(deg_avg),
+        'n_cores_cbdp': int(n_cores),
+        'n_domains_lpih': int(D),
+        'pfnsar_beta': float(beta),
+        'methods': methods,
     }
 
 

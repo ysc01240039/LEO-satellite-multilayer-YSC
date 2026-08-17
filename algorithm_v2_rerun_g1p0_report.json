@@ -1,0 +1,1572 @@
+{
+  "description": "fig4 scaling benchmark at gamma=1.0 (nominal operating point), v2 routing base (paper Algorithm 2), 5 seeds, config B demands",
+  "date": "2026-08-07",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "gamma": 1.0,
+  "demands": "population-weighted (config B)",
+  "per_seed_results": [
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 42,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.788323316637962,
+        "avg_dist_km": 2736.9517775938502,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9488.63222995138,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.439615282086705,
+        "avg_dist_km": 2795.664702570144,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 8.172606477396668,
+        "avg_dist_km": 2678.6251284376717,
+        "n_used": 16
+      },
+      "n_cores_cbdp": 39
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 43,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.0821559687668234,
+        "avg_dist_km": 2888.278087448319,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9530.674081485176,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.439615282086705,
+        "avg_dist_km": 2813.273932820948,
+        "n_used": 26
+      },
+      "cbdp": {
+        "imbalance": 4.477449178325019,
+        "avg_dist_km": 2737.5371883372804,
+        "n_used": 21
+      },
+      "n_cores_cbdp": 32
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 44,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.788323316637962,
+        "avg_dist_km": 2510.0064754021364,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9492.365197632445,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.439615282086705,
+        "avg_dist_km": 2764.080539601444,
+        "n_used": 28
+      },
+      "cbdp": {
+        "imbalance": 5.016499230459269,
+        "avg_dist_km": 3055.25090208726,
+        "n_used": 22
+      },
+      "n_cores_cbdp": 34
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 45,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 2.2014510147531254,
+        "avg_dist_km": 2671.0822827656457,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9497.471944019188,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 5.3707899223022855,
+        "avg_dist_km": 2788.5458204050456,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 6.522125007135034,
+        "avg_dist_km": 2646.9622608149493,
+        "n_used": 19
+      },
+      "n_cores_cbdp": 36
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 46,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 2.2014510147531254,
+        "avg_dist_km": 2673.2476276404072,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9496.064498547981,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 5.757543338659331,
+        "avg_dist_km": 2794.2190568074316,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 6.542107637257113,
+        "avg_dist_km": 2687.0524468173576,
+        "n_used": 17
+      },
+      "n_cores_cbdp": 37
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 47,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 2.201451014753126,
+        "avg_dist_km": 2720.4146766559697,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9512.807358188737,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.857251788786994,
+        "avg_dist_km": 2770.265131699439,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 6.375722810439552,
+        "avg_dist_km": 2857.1785487601887,
+        "n_used": 17
+      },
+      "n_cores_cbdp": 38
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 48,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.788323316637962,
+        "avg_dist_km": 2673.0153827599433,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9497.425930585054,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.75181439671374,
+        "avg_dist_km": 2801.1460983163474,
+        "n_used": 26
+      },
+      "cbdp": {
+        "imbalance": 6.059821036086798,
+        "avg_dist_km": 2728.1738358637667,
+        "n_used": 17
+      },
+      "n_cores_cbdp": 36
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 49,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.788323316637962,
+        "avg_dist_km": 2817.672648551229,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9489.039672685169,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 5.248857506381759,
+        "avg_dist_km": 2808.123436857641,
+        "n_used": 26
+      },
+      "cbdp": {
+        "imbalance": 7.432992572840408,
+        "avg_dist_km": 2459.436049512913,
+        "n_used": 14
+      },
+      "n_cores_cbdp": 38
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 50,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.0821559687668234,
+        "avg_dist_km": 2585.0321525137124,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9526.290598084186,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 3.8099628141887676,
+        "avg_dist_km": 2819.7682152874095,
+        "n_used": 27
+      },
+      "cbdp": {
+        "imbalance": 4.990970458958798,
+        "avg_dist_km": 2781.423963524387,
+        "n_used": 16
+      },
+      "n_cores_cbdp": 36
+    },
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "seed": 51,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.991433634913374,
+        "avg_dist_km": 2659.675686618731,
+        "n_used": 18
+      },
+      "roundrobin": {
+        "imbalance": 0.1044404766970193,
+        "avg_dist_km": 9498.581596058442,
+        "n_used": 48
+      },
+      "nearest3": {
+        "imbalance": 4.439615282086705,
+        "avg_dist_km": 2792.7564029406067,
+        "n_used": 25
+      },
+      "cbdp": {
+        "imbalance": 8.240549672193621,
+        "avg_dist_km": 3223.192224971357,
+        "n_used": 21
+      },
+      "n_cores_cbdp": 32
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 42,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1889.8565953858015,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8807.647600985827,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 5.351345886203671,
+        "avg_dist_km": 2120.0669792566946,
+        "n_used": 29
+      },
+      "cbdp": {
+        "imbalance": 11.399706863892824,
+        "avg_dist_km": 1576.1111657858596,
+        "n_used": 15
+      },
+      "n_cores_cbdp": 57
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 43,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1918.0910096362763,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8816.087479745367,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.104471012869218,
+        "avg_dist_km": 2152.9854928750483,
+        "n_used": 31
+      },
+      "cbdp": {
+        "imbalance": 11.493798271631983,
+        "avg_dist_km": 2024.2083762175232,
+        "n_used": 20
+      },
+      "n_cores_cbdp": 49
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 44,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 2002.4033979067249,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8814.914487580663,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.104471012869219,
+        "avg_dist_km": 2088.108599188958,
+        "n_used": 28
+      },
+      "cbdp": {
+        "imbalance": 7.2732649098877795,
+        "avg_dist_km": 1778.8090443658998,
+        "n_used": 17
+      },
+      "n_cores_cbdp": 54
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 45,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1865.0859328290614,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8811.02205393286,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.104471012869219,
+        "avg_dist_km": 2172.943678240261,
+        "n_used": 29
+      },
+      "cbdp": {
+        "imbalance": 6.646210631749626,
+        "avg_dist_km": 2061.4856531326172,
+        "n_used": 21
+      },
+      "n_cores_cbdp": 51
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 46,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 5.208944560377198,
+        "avg_dist_km": 2023.0178209609098,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8817.000186742354,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 5.238698869509555,
+        "avg_dist_km": 2106.816359333017,
+        "n_used": 31
+      },
+      "cbdp": {
+        "imbalance": 11.552480486840507,
+        "avg_dist_km": 1758.3421522377528,
+        "n_used": 15
+      },
+      "n_cores_cbdp": 56
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 47,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 4.237964457054383,
+        "avg_dist_km": 1804.1495518664974,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8824.004850835621,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 5.238698869509556,
+        "avg_dist_km": 2106.4490660347387,
+        "n_used": 30
+      },
+      "cbdp": {
+        "imbalance": 14.290886400788272,
+        "avg_dist_km": 1830.919245726059,
+        "n_used": 19
+      },
+      "n_cores_cbdp": 51
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 48,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 5.208944560377198,
+        "avg_dist_km": 1863.200742289219,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8801.003228625643,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.421097778787277,
+        "avg_dist_km": 2093.848272544653,
+        "n_used": 29
+      },
+      "cbdp": {
+        "imbalance": 9.28084086969601,
+        "avg_dist_km": 1684.643006341444,
+        "n_used": 16
+      },
+      "n_cores_cbdp": 51
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 49,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 4.237964457054383,
+        "avg_dist_km": 2000.8743692272576,
+        "n_used": 19
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8812.321527160782,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 5.238698869509555,
+        "avg_dist_km": 2084.930659348524,
+        "n_used": 30
+      },
+      "cbdp": {
+        "imbalance": 16.220136996870394,
+        "avg_dist_km": 1725.2787681154937,
+        "n_used": 12
+      },
+      "n_cores_cbdp": 52
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 50,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1934.3408417376595,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8812.590049839539,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.104471012869218,
+        "avg_dist_km": 2098.0236191752415,
+        "n_used": 30
+      },
+      "cbdp": {
+        "imbalance": 14.525913139768816,
+        "avg_dist_km": 1588.1879153142174,
+        "n_used": 16
+      },
+      "n_cores_cbdp": 51
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "seed": 51,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 3.026995145285548,
+        "avg_dist_km": 1848.0413616254743,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.1418248735815808,
+        "avg_dist_km": 8797.929877242346,
+        "n_used": 66
+      },
+      "nearest3": {
+        "imbalance": 6.104471012869219,
+        "avg_dist_km": 2098.93801672842,
+        "n_used": 31
+      },
+      "cbdp": {
+        "imbalance": 10.461163032709427,
+        "avg_dist_km": 1799.8819221957242,
+        "n_used": 16
+      },
+      "n_cores_cbdp": 53
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 42,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 962.0531517355657,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8719.877190923993,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 25.144249101938637,
+        "avg_dist_km": 1127.8179602936273,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 9.031284559436498,
+        "avg_dist_km": 1564.911165130396,
+        "n_used": 77
+      },
+      "n_cores_cbdp": 82
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 43,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 930.5312907761003,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8708.250322129474,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1127.2932843447065,
+        "n_used": 49
+      },
+      "cbdp": {
+        "imbalance": 32.15002084068801,
+        "avg_dist_km": 1295.0206204083067,
+        "n_used": 51
+      },
+      "n_cores_cbdp": 209
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 44,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 894.9207987533088,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8739.405157395835,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1114.9474866210455,
+        "n_used": 45
+      },
+      "cbdp": {
+        "imbalance": 63.1328707802606,
+        "avg_dist_km": 1660.0007731204157,
+        "n_used": 69
+      },
+      "n_cores_cbdp": 103
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 45,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 959.1973082944963,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8726.799393973659,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.10427656080478,
+        "avg_dist_km": 1126.742867608532,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 20.79169839243755,
+        "avg_dist_km": 1610.982327351044,
+        "n_used": 71
+      },
+      "n_cores_cbdp": 88
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 46,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 897.7726175945903,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8729.201214698016,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 19.117056860366578,
+        "avg_dist_km": 1091.45183406581,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 19.117056860366578,
+        "avg_dist_km": 1173.418404874278,
+        "n_used": 45
+      },
+      "n_cores_cbdp": 168
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 47,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 920.2711800423118,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8715.956906983562,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1096.7215116219631,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 28.064509835493276,
+        "avg_dist_km": 1202.1755681394363,
+        "n_used": 50
+      },
+      "n_cores_cbdp": 168
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 48,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 905.4389925496641,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8714.229423774228,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1133.6505958958799,
+        "n_used": 46
+      },
+      "cbdp": {
+        "imbalance": 29.300777268151297,
+        "avg_dist_km": 1235.8325269631086,
+        "n_used": 47
+      },
+      "n_cores_cbdp": 215
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 49,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678396,
+        "avg_dist_km": 921.9079696157123,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8712.395923652377,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1121.0545962787583,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 34.677779490438674,
+        "avg_dist_km": 1378.233090838111,
+        "n_used": 53
+      },
+      "n_cores_cbdp": 174
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 50,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.93178140367839,
+        "avg_dist_km": 944.987539572958,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8711.663669222666,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 27.104276560804777,
+        "avg_dist_km": 1130.4883452073993,
+        "n_used": 49
+      },
+      "cbdp": {
+        "imbalance": 20.74403038007469,
+        "avg_dist_km": 1489.785690748053,
+        "n_used": 55
+      },
+      "n_cores_cbdp": 133
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "seed": 51,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 22.931781403678393,
+        "avg_dist_km": 935.5789441577683,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.07333220544936671,
+        "avg_dist_km": 8733.298504969665,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 29.172930522324513,
+        "avg_dist_km": 1137.8843067693274,
+        "n_used": 46
+      },
+      "cbdp": {
+        "imbalance": 26.326687887119792,
+        "avg_dist_km": 1260.014008154589,
+        "n_used": 50
+      },
+      "n_cores_cbdp": 185
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 42,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.86356280735678,
+        "avg_dist_km": 855.0425293325015,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8040.341761416887,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.20855312160956,
+        "avg_dist_km": 1006.0348348535824,
+        "n_used": 45
+      },
+      "cbdp": {
+        "imbalance": 59.29211170775369,
+        "avg_dist_km": 1351.0565377766345,
+        "n_used": 68
+      },
+      "n_cores_cbdp": 223
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 43,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 827.464395180923,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8021.079336257941,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 41.77811825938561,
+        "avg_dist_km": 1016.2827179102911,
+        "n_used": 48
+      },
+      "cbdp": {
+        "imbalance": 30.173098922326353,
+        "avg_dist_km": 1333.7471616672015,
+        "n_used": 76
+      },
+      "n_cores_cbdp": 80
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 44,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 828.9267944470419,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8054.167961295512,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.208553121609555,
+        "avg_dist_km": 1032.3659915450103,
+        "n_used": 49
+      },
+      "cbdp": {
+        "imbalance": 28.118660737689794,
+        "avg_dist_km": 1385.6492387655724,
+        "n_used": 81
+      },
+      "n_cores_cbdp": 205
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 45,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 878.7123595084213,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8044.833450119468,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.208553121609555,
+        "avg_dist_km": 1029.9972547269406,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 32.52513187296574,
+        "avg_dist_km": 1294.7345109886685,
+        "n_used": 82
+      },
+      "n_cores_cbdp": 48
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 46,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.86356280735679,
+        "avg_dist_km": 886.0963948153636,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8050.69965273213,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.20855312160955,
+        "avg_dist_km": 1018.2176040883169,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 63.40594679362861,
+        "avg_dist_km": 1305.9366833619965,
+        "n_used": 69
+      },
+      "n_cores_cbdp": 223
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 47,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 850.3406546420944,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8035.693478836166,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.20855312160956,
+        "avg_dist_km": 994.5424639885892,
+        "n_used": 48
+      },
+      "cbdp": {
+        "imbalance": 79.50665174279915,
+        "avg_dist_km": 1245.9294699120198,
+        "n_used": 68
+      },
+      "n_cores_cbdp": 219
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 48,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 835.0663116438715,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8047.116428355378,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.208553121609555,
+        "avg_dist_km": 1012.4348656728829,
+        "n_used": 48
+      },
+      "cbdp": {
+        "imbalance": 32.52513187296573,
+        "avg_dist_km": 1288.1091632621362,
+        "n_used": 80
+      },
+      "n_cores_cbdp": 70
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 49,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 827.1395820496276,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8023.080088768189,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.208553121609555,
+        "avg_dist_km": 1035.9741069960705,
+        "n_used": 49
+      },
+      "cbdp": {
+        "imbalance": 22.9404682324399,
+        "avg_dist_km": 1361.038393725959,
+        "n_used": 85
+      },
+      "n_cores_cbdp": 86
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 50,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.863562807356786,
+        "avg_dist_km": 850.0829573759378,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8033.104164448322,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 54.20855312160955,
+        "avg_dist_km": 1012.1472942654349,
+        "n_used": 47
+      },
+      "cbdp": {
+        "imbalance": 22.9404682324399,
+        "avg_dist_km": 1385.1164761772827,
+        "n_used": 87
+      },
+      "n_cores_cbdp": 105
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "seed": 51,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 45.86356280735678,
+        "avg_dist_km": 872.2861190053356,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.14666441089873342,
+        "avg_dist_km": 8049.941589756873,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 41.7781182593856,
+        "avg_dist_km": 1016.7740035278197,
+        "n_used": 50
+      },
+      "cbdp": {
+        "imbalance": 22.9404682324399,
+        "avg_dist_km": 1326.2786768915837,
+        "n_used": 81
+      },
+      "n_cores_cbdp": 43
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 42,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 466.4251250579222,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8400.526772733352,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 578.4851403188421,
+        "n_used": 56
+      },
+      "cbdp": {
+        "imbalance": 143.37078129603296,
+        "avg_dist_km": 751.2550839874903,
+        "n_used": 87
+      },
+      "n_cores_cbdp": 213
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 43,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 465.37578895749095,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8414.378698258106,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 580.5944505689821,
+        "n_used": 53
+      },
+      "cbdp": {
+        "imbalance": 114.22522668474812,
+        "avg_dist_km": 736.4033545936475,
+        "n_used": 87
+      },
+      "n_cores_cbdp": 169
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 44,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 491.5423319850639,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8409.757305266856,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 101.59199359866801,
+        "avg_dist_km": 588.6419055630583,
+        "n_used": 56
+      },
+      "cbdp": {
+        "imbalance": 143.37078129603296,
+        "avg_dist_km": 771.4241339349308,
+        "n_used": 83
+      },
+      "n_cores_cbdp": 140
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 45,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 478.18490213309116,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8411.455939146552,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 581.594667956356,
+        "n_used": 55
+      },
+      "cbdp": {
+        "imbalance": 110.49476717242307,
+        "avg_dist_km": 735.1334047723353,
+        "n_used": 87
+      },
+      "n_cores_cbdp": 78
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 46,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.16658485482867,
+        "avg_dist_km": 464.3517113692518,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8412.283451337946,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 587.0137283261447,
+        "n_used": 54
+      },
+      "cbdp": {
+        "imbalance": 110.49476717242305,
+        "avg_dist_km": 722.6524908933562,
+        "n_used": 90
+      },
+      "n_cores_cbdp": 96
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 47,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 453.7340689812839,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8414.313868232974,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 586.9917014959935,
+        "n_used": 53
+      },
+      "cbdp": {
+        "imbalance": 110.49476717242308,
+        "avg_dist_km": 709.8923529621067,
+        "n_used": 88
+      },
+      "n_cores_cbdp": 50
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 48,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 458.3728503920805,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8411.332812721259,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.1579452873717,
+        "avg_dist_km": 579.0940609450629,
+        "n_used": 54
+      },
+      "cbdp": {
+        "imbalance": 53.83946440111639,
+        "avg_dist_km": 745.8841278262732,
+        "n_used": 94
+      },
+      "n_cores_cbdp": 130
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 49,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 473.2266139500456,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8408.468696447304,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 144.52579754121044,
+        "avg_dist_km": 581.1033104979767,
+        "n_used": 56
+      },
+      "cbdp": {
+        "imbalance": 86.99468717915883,
+        "avg_dist_km": 724.0572982888756,
+        "n_used": 90
+      },
+      "n_cores_cbdp": 142
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 50,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 455.97040309503217,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8409.643851259802,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 184.15794528737175,
+        "avg_dist_km": 583.5947214981362,
+        "n_used": 54
+      },
+      "cbdp": {
+        "imbalance": 114.22522668474812,
+        "avg_dist_km": 717.7765457467954,
+        "n_used": 85
+      },
+      "n_cores_cbdp": 92
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "seed": 51,
+      "gamma": 1.0,
+      "greedy": {
+        "imbalance": 202.1665848548287,
+        "avg_dist_km": 446.4443583068878,
+        "n_used": 20
+      },
+      "roundrobin": {
+        "imbalance": 0.6464967232416169,
+        "avg_dist_km": 8424.543775760854,
+        "n_used": 493
+      },
+      "nearest3": {
+        "imbalance": 144.52579754121047,
+        "avg_dist_km": 586.2201713327021,
+        "n_used": 56
+      },
+      "cbdp": {
+        "imbalance": 110.49476717242307,
+        "avg_dist_km": 713.3277687344322,
+        "n_used": 92
+      },
+      "n_cores_cbdp": 70
+    }
+  ],
+  "benchmark_results_mean_std": [
+    {
+      "constellation": "Globalstar-scale",
+      "N": 48,
+      "gamma": 1.0,
+      "n_seeds": 10,
+      "greedy": {
+        "imbalance_mean": 3.1913391883258244,
+        "imbalance_std": 0.7091677559428705,
+        "avg_dist_km_mean": 2693.5376797949943,
+        "avg_dist_km_std": 101.92220388864034,
+        "n_used_mean": 19.2,
+        "n_used_std": 0.6
+      },
+      "roundrobin": {
+        "imbalance_mean": 0.10444047669701931,
+        "imbalance_std": 1.3877787807814457e-17,
+        "avg_dist_km_mean": 9502.935310723775,
+        "avg_dist_km_std": 14.311271346880549,
+        "n_used_mean": 48.0,
+        "n_used_std": 0.0
+      },
+      "nearest3": {
+        "imbalance_mean": 4.755468089537969,
+        "imbalance_std": 0.5412591209345253,
+        "avg_dist_km_mean": 2794.7843337306454,
+        "avg_dist_km_std": 16.65083695887665,
+        "n_used_mean": 26.6,
+        "n_used_std": 0.7999999999999999
+      },
+      "cbdp": {
+        "imbalance_mean": 6.383084408109228,
+        "imbalance_std": 1.2385891004970224,
+        "avg_dist_km_mean": 2785.483254912713,
+        "avg_dist_km_std": 205.35475229004007,
+        "n_used_mean": 18.0,
+        "n_used_std": 2.4899799195977463
+      },
+      "n_cores_cbdp_mean": 35.8,
+      "n_cores_cbdp_std": 2.315167380558045
+    },
+    {
+      "constellation": "Iridium-scale",
+      "N": 66,
+      "gamma": 1.0,
+      "n_seeds": 10,
+      "greedy": {
+        "imbalance_mean": 3.7055788906576446,
+        "imbalance_std": 0.885998919485635,
+        "avg_dist_km_mean": 1914.9061623464881,
+        "avg_dist_km_std": 70.45792676945541,
+        "n_used_mean": 19.6,
+        "n_used_std": 0.4898979485566356
+      },
+      "roundrobin": {
+        "imbalance_mean": 0.1418248735815808,
+        "imbalance_std": 0.0,
+        "avg_dist_km_mean": 8811.4521342691,
+        "avg_dist_km_std": 7.284003708620778,
+        "n_used_mean": 66.0,
+        "n_used_std": 0.0
+      },
+      "nearest3": {
+        "imbalance_mean": 5.801089533786571,
+        "imbalance_std": 0.4467360472874032,
+        "avg_dist_km_mean": 2112.3110742725557,
+        "avg_dist_km_std": 27.412993448345038,
+        "n_used_mean": 29.8,
+        "n_used_std": 0.9797958971132711
+      },
+      "cbdp": {
+        "imbalance_mean": 11.314440160383564,
+        "imbalance_std": 2.9380576505508147,
+        "avg_dist_km_mean": 1782.786724943259,
+        "avg_dist_km_std": 152.54595659767162,
+        "n_used_mean": 16.7,
+        "n_used_std": 2.5317977802344322
+      },
+      "n_cores_cbdp_mean": 52.5,
+      "n_cores_cbdp_std": 2.3769728648009427
+    },
+    {
+      "constellation": "Medium-scale",
+      "N": 500,
+      "gamma": 1.0,
+      "n_seeds": 10,
+      "greedy": {
+        "imbalance_mean": 22.931781403678393,
+        "imbalance_std": 1.5888218580782547e-15,
+        "avg_dist_km_mean": 927.2659793092477,
+        "avg_dist_km_std": 22.56922773158813,
+        "n_used_mean": 20.0,
+        "n_used_std": 0.0
+      },
+      "roundrobin": {
+        "imbalance_mean": 0.07333220544936671,
+        "imbalance_std": 0.0,
+        "avg_dist_km_mean": 8721.107770772349,
+        "avg_dist_km_std": 9.935116852103949,
+        "n_used_mean": 493.0,
+        "n_used_std": 0.0
+      },
+      "nearest3": {
+        "imbalance_mean": 26.31641724102632,
+        "imbalance_std": 2.5633862821953084,
+        "avg_dist_km_mean": 1120.805278870705,
+        "avg_dist_km_std": 14.673147136607557,
+        "n_used_mean": 47.0,
+        "n_used_std": 1.1832159566199232
+      },
+      "cbdp": {
+        "imbalance_mean": 28.3336716294467,
+        "imbalance_std": 13.575140373218272,
+        "avg_dist_km_mean": 1387.0374175727736,
+        "avg_dist_km_std": 171.52435756313812,
+        "n_used_mean": 56.8,
+        "n_used_std": 10.665833300778708
+      },
+      "n_cores_cbdp_mean": 152.5,
+      "n_cores_cbdp_std": 45.88954129210707
+    },
+    {
+      "constellation": "Large-scale",
+      "N": 1000,
+      "gamma": 1.0,
+      "n_seeds": 10,
+      "greedy": {
+        "imbalance_mean": 45.863562807356786,
+        "imbalance_std": 3.891802844472395e-15,
+        "avg_dist_km_mean": 851.1158098001118,
+        "avg_dist_km_std": 20.819863966006636,
+        "n_used_mean": 20.0,
+        "n_used_std": 0.0
+      },
+      "roundrobin": {
+        "imbalance_mean": 0.14666441089873342,
+        "imbalance_std": 0.0,
+        "avg_dist_km_mean": 8040.005791198686,
+        "avg_dist_km_std": 10.947806839074737,
+        "n_used_mean": 493.0,
+        "n_used_std": 0.0
+      },
+      "nearest3": {
+        "imbalance_mean": 51.72246614916477,
+        "imbalance_std": 4.9721739448895805,
+        "avg_dist_km_mean": 1017.4771137574938,
+        "avg_dist_km_std": 11.974121220370233,
+        "n_used_mean": 47.8,
+        "n_used_std": 1.3266499161421599
+      },
+      "cbdp": {
+        "imbalance_mean": 39.43681383474488,
+        "imbalance_std": 19.235883269777002,
+        "avg_dist_km_mean": 1327.7596312529054,
+        "avg_dist_km_std": 42.619848063225696,
+        "n_used_mean": 77.7,
+        "n_used_std": 6.723838189605696
+      },
+      "n_cores_cbdp_mean": 130.2,
+      "n_cores_cbdp_std": 73.3468472396735
+    },
+    {
+      "constellation": "Starlink Gen1",
+      "N": 4408,
+      "gamma": 1.0,
+      "n_seeds": 10,
+      "greedy": {
+        "imbalance_mean": 202.16658485482867,
+        "imbalance_std": 2.6963201038669063e-14,
+        "avg_dist_km_mean": 465.36281542281506,
+        "avg_dist_km_std": 12.425683513235526,
+        "n_used_mean": 20.0,
+        "n_used_std": 0.0
+      },
+      "roundrobin": {
+        "imbalance_mean": 0.6464967232416169,
+        "imbalance_std": 0.0,
+        "avg_dist_km_mean": 8411.670517116501,
+        "avg_dist_km_std": 5.681378030193755,
+        "n_used_mean": 493.0,
+        "n_used_std": 0.0
+      },
+      "nearest3": {
+        "imbalance_mean": 167.97492056926913,
+        "imbalance_std": 27.091784285907163,
+        "avg_dist_km_mean": 583.3333858503255,
+        "avg_dist_km_std": 3.4711079677602603,
+        "n_used_mean": 54.7,
+        "n_used_std": 1.1874342087037917
+      },
+      "cbdp": {
+        "imbalance_mean": 109.80052362315298,
+        "imbalance_std": 24.385968540123653,
+        "avg_dist_km_mean": 732.7806561740244,
+        "avg_dist_km_std": 18.25122594171646,
+        "n_used_mean": 88.3,
+        "n_used_std": 3.1
+      },
+      "n_cores_cbdp_mean": 118.0,
+      "n_cores_cbdp_std": 47.45313477527065
+    }
+  ]
+}
