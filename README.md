@@ -36,11 +36,25 @@ fig5_ablation_v2_experiment.py        Ablation study (PDE SNC / dynamic reconfig
                                       SNC mesh / intra-core spreading) -> Fig. 5
 fig5_ablation_experiment.py           DEPRECATED v1 ablation (audit only)
 dim5_phase_diagram.py                 Phase-diagram analysis (dimensionless group)
+paper/ns3/                            ns-3 packet-level validation & comparison:
+  leo_cbdp_eval.cc                    CBDP ns-3 implementation (routes, portals)
+  leo_route_compare.cc                Comparison vs OLSR/AODV/Dijkstra
+  parse_and_plot_eval.py              Parses logs, writes Fig. 6/8/9 + overview
+  run_compare.sh / run_full_batch.sh  Batch evaluation drivers
+  eval_results_summary.json           Summarized ns-3 results
+paper/generate_fig4_real.py           Regenerates Fig. 4 (algorithm benchmark)
+paper/generate_fig5_real.py           Regenerates Fig. 5 (ablation)
+paper/figures/                        Final publication-quality figure PDFs
 tools/                                Auxiliary tools (LaTeX checks, PDF annotation
                                       extraction, Lyapunov verification, ns-3 fixes)
 *.json (root)                         Result reports used by the paper's tables
                                       and figures
 ```
+
+> Note: the large binary `orbit_bin/` constellation data (~6 GB per copy, two
+> copies on disk) exceeds GitHub's per-repo limits and is therefore not
+> distributed here. The orbit generator and all downstream consumers read it
+> deterministically; contact the authors if you need the raw orbit files.
 
 ---
 
@@ -96,6 +110,26 @@ g++ -O3 -fopenmp -std=c++17 main.cpp -o multilayer_sim_real
 ```
 
 The simulator writes scan outputs into `scan_output/` (gamma scan, kappa scan, N scan, long runs, and seed sweeps). The committed JSON files under `scan_output/` are the real calibration data used for model calibration and for validating the perturbation-theory prediction of the critical `gamma`.
+
+### 5. ns-3 packet-level validation (paper Fig. 6/8/9 and comparison)
+
+The ns-3 evaluation lives under `paper/ns3/`. Build and run the two simulations against the required ns-3 build, then regenerate the figure PDFs:
+
+```bash
+cd paper/ns3
+# compile leo_cbdp_eval.cc / leo_route_compare.cc against your ns-3 tree
+# run the batch driver (produces logs under logs_eval/)
+bash run_full_batch.sh
+# parse logs and write Fig. 6 / 8 / 9 / overview PDFs
+python parse_and_plot_eval.py
+```
+
+### 6. Regenerate the algorithm benchmark and ablation figures
+
+```bash
+python paper/generate_fig4_real.py   # Fig. 4 from algorithm_v2_e2e_g1p0_report.json
+python paper/generate_fig5_real.py   # Fig. 5 from fig5_ablation_v2_results.json
+```
 
 ---
 

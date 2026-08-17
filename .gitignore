@@ -102,8 +102,15 @@ temp_repo/
 figures/
 src/
 
-# Paper writing (local only, not for publication)
-paper/
+# Paper writing (local only, not for publication).
+# Only the ns-3 comparison code, figure-generation scripts, and the final
+# figure PDFs under paper/ are published for reproducibility; everything else
+# under paper/ stays private.
+paper/*
+!paper/ns3/
+!paper/figures/
+!paper/generate_fig4_real.py
+!paper/generate_fig5_real.py
 
 # Reference PDFs (downloaded papers, too large for git)
 references/
@@ -124,6 +131,7 @@ OriginOne.tex
 _*.py
 _*.txt
 _*.ps1
+_*.sh
 _*.json
 _ppt_extract/
 _ppt_images/
@@ -135,3 +143,14 @@ pytorchFileYSC_2analyze_images.py
 
 # Reference / submission PDFs (local only, too large for git)
 *.pdf
+# ... but keep the paper's final figure PDFs reproducible
+!paper/figures/fig1_phase_diagram.pdf
+!paper/figures/fig2_gamma_scan.pdf
+!paper/figures/fig3_cbdp_architecture.pdf
+!paper/figures/fig4_algorithm_benchmark.pdf
+!paper/figures/fig5_ablation.pdf
+!paper/figures/fig6_ns3_validation.pdf
+!paper/figures/fig8_failure_merged.pdf
+!paper/figures/fig9_core_failure.pdf
+!paper/figures/fig_cmp_overview.pdf
+!paper/figures/fig_cmp_overview.png

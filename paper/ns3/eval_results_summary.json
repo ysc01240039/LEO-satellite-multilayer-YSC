@@ -1,0 +1,540 @@
+{
+ "fig6": {
+  "gamma_0.8": {
+   "n_seeds": 3,
+   "nCores_per_seed": [
+    75,
+    92,
+    68
+   ],
+   "throughput_mbps": [
+    390.138,
+    390.113,
+    390.163
+   ],
+   "offered_mbps": [
+    390.821,
+    390.849,
+    390.809
+   ],
+   "delay_ms": [
+    34.011,
+    36.899,
+    31.794000000000004
+   ],
+   "loss_pct": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ctrlTxPkts": [
+    29055,
+    44664,
+    26604
+   ],
+   "ctrlTxBytes": [
+    4453956,
+    7010112,
+    3932496
+   ]
+  },
+  "gamma_1.0": {
+   "n_seeds": 3,
+   "nCores_per_seed": [
+    57,
+    51,
+    72
+   ],
+   "throughput_mbps": [
+    390.111,
+    390.02,
+    390.181
+   ],
+   "offered_mbps": [
+    390.791,
+    390.781,
+    390.816
+   ],
+   "delay_ms": [
+    33.689,
+    37.725,
+    31.354
+   ],
+   "loss_pct": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ctrlTxPkts": [
+    31725,
+    52203,
+    25635
+   ],
+   "ctrlTxBytes": [
+    4521900,
+    7075284,
+    3856404
+   ]
+  },
+  "gamma_1.5": {
+   "n_seeds": 3,
+   "nCores_per_seed": [
+    199,
+    154,
+    176
+   ],
+   "throughput_mbps": [
+    390.351,
+    390.206,
+    390.361
+   ],
+   "offered_mbps": [
+    391.029,
+    390.953,
+    390.99
+   ],
+   "delay_ms": [
+    33.417,
+    37.185,
+    31.153
+   ],
+   "loss_pct": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ctrlTxPkts": [
+    25545,
+    37776,
+    22083
+   ],
+   "ctrlTxBytes": [
+    5237628,
+    7343616,
+    4195668
+   ]
+  },
+  "dijkstra_ref": {
+   "delay_ms": 32.279999999999994,
+   "delay_std_ms": 2.7821980519006924,
+   "throughput_mbps": 389.6783333333333,
+   "throughput_std": 0.05061181241129428
+  }
+ },
+ "fig8": {
+  "failFrac_0.01": {
+   "failed_isls": 20,
+   "total_isls": 2002,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "baseline_mbps": 388.4513622100685,
+   "loss_pct_run_avg": 0.873,
+   "throughput_mbps": 386.942,
+   "delay_ms": 33.754
+  },
+  "failFrac_0.02": {
+   "failed_isls": 40,
+   "total_isls": 2002,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "baseline_mbps": 388.45653300590465,
+   "loss_pct_run_avg": 1.224,
+   "throughput_mbps": 385.578,
+   "delay_ms": 33.783
+  },
+  "failFrac_0.05": {
+   "failed_isls": 100,
+   "total_isls": 2002,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "baseline_mbps": 388.4730696472614,
+   "loss_pct_run_avg": 2.983,
+   "throughput_mbps": 378.709,
+   "delay_ms": 33.831
+  },
+  "failFrac_0.10": {
+   "failed_isls": 200,
+   "total_isls": 2002,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "baseline_mbps": 388.5022914141305,
+   "loss_pct_run_avg": 4.613,
+   "throughput_mbps": 372.352,
+   "delay_ms": 34.11
+  }
+ },
+ "fig_cmp": {
+  "N200": {
+   "Dijkstra": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.136,
+     389.777,
+     389.83
+    ],
+    "delay_ms": [
+     60.21,
+     27.257,
+     24.122
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     0,
+     0,
+     0
+    ]
+   },
+   "CBDP": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.431,
+     390.068,
+     390.125
+    ],
+    "delay_ms": [
+     60.428999999999995,
+     27.718,
+     24.488
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     17931,
+     9438,
+     11796
+    ]
+   },
+   "OLSR": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.136,
+     389.777,
+     389.83
+    ],
+    "delay_ms": [
+     60.21,
+     27.257,
+     24.122
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     57733,
+     57066,
+     62344
+    ]
+   },
+   "AODV": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     216.279,
+     220.422,
+     222.108
+    ],
+    "delay_ms": [
+     49.775,
+     25.767000000000003,
+     26.383
+    ],
+    "loss_pct": [
+     40.406,
+     41.358,
+     40.812
+    ],
+    "ctrlTxPkts": [
+     185603,
+     124289,
+     125006
+    ]
+   }
+  },
+  "N400": {
+   "Dijkstra": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.831,
+     389.684,
+     389.832
+    ],
+    "delay_ms": [
+     24.314,
+     31.956,
+     24.451
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     0,
+     0,
+     0
+    ]
+   },
+   "CBDP": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     390.145,
+     389.997,
+     390.154
+    ],
+    "delay_ms": [
+     25.607000000000003,
+     33.092000000000006,
+     25.114
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     13038,
+     22740,
+     10218
+    ]
+   },
+   "OLSR": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.831,
+     389.684,
+     389.832
+    ],
+    "delay_ms": [
+     24.314,
+     31.956,
+     24.451
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     185116,
+     145932,
+     205977
+    ]
+   },
+   "AODV": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     225.753,
+     221.189,
+     219.008
+    ],
+    "delay_ms": [
+     23.09,
+     29.656,
+     23.514
+    ],
+    "loss_pct": [
+     39.83,
+     40.85,
+     41.364
+    ],
+    "ctrlTxPkts": [
+     177379,
+     180836,
+     177806
+    ]
+   }
+  },
+  "N600": {
+   "Dijkstra": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.778,
+     389.391,
+     389.801
+    ],
+    "delay_ms": [
+     26.848,
+     46.759,
+     25.965
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     0,
+     0,
+     0
+    ]
+   },
+   "CBDP": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     390.132,
+     389.771,
+     390.181
+    ],
+    "delay_ms": [
+     29.371000000000002,
+     47.568,
+     26.862000000000002
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     16788,
+     38529,
+     13704
+    ]
+   },
+   "OLSR": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     389.778,
+     389.391,
+     389.801
+    ],
+    "delay_ms": [
+     26.848,
+     46.759,
+     25.965
+    ],
+    "loss_pct": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ctrlTxPkts": [
+     376831,
+     270047,
+     400536
+    ]
+   },
+   "AODV": {
+    "n_seeds": 3,
+    "throughput_mbps": [
+     225.829,
+     215.792,
+     221.651
+    ],
+    "delay_ms": [
+     24.525000000000002,
+     39.724000000000004,
+     25.369
+    ],
+    "loss_pct": [
+     38.906,
+     40.925,
+     39.66
+    ],
+    "ctrlTxPkts": [
+     291610,
+     269147,
+     294525
+    ]
+   }
+  }
+ },
+ "fig9": {
+  "noncore_failFrac_0.01": {
+   "failed_isls": 20,
+   "isolated_sats": 4,
+   "isolated_portals": 0,
+   "reelection": 0,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 1.119,
+   "throughput_mbps": 385.958,
+   "delay_ms": 33.826
+  },
+  "core_failFrac_0.01": {
+   "failed_isls": 20,
+   "isolated_sats": 4,
+   "isolated_portals": 4,
+   "reelection": 1,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 0.642,
+   "throughput_mbps": 387.862,
+   "delay_ms": 33.913
+  },
+  "noncore_failFrac_0.02": {
+   "failed_isls": 40,
+   "isolated_sats": 8,
+   "isolated_portals": 0,
+   "reelection": 0,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 1.137,
+   "throughput_mbps": 385.894,
+   "delay_ms": 33.825
+  },
+  "core_failFrac_0.02": {
+   "failed_isls": 40,
+   "isolated_sats": 8,
+   "isolated_portals": 8,
+   "reelection": 1,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 1.427,
+   "throughput_mbps": 384.822,
+   "delay_ms": 33.943
+  },
+  "noncore_failFrac_0.05": {
+   "failed_isls": 100,
+   "isolated_sats": 18,
+   "isolated_portals": 0,
+   "reelection": 0,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 2.059,
+   "throughput_mbps": 382.298,
+   "delay_ms": 33.957
+  },
+  "core_failFrac_0.05": {
+   "failed_isls": 100,
+   "isolated_sats": 22,
+   "isolated_portals": 22,
+   "reelection": 1,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 3.578,
+   "throughput_mbps": 376.513,
+   "delay_ms": 33.671
+  },
+  "noncore_failFrac_0.10": {
+   "failed_isls": 200,
+   "isolated_sats": 32,
+   "isolated_portals": 0,
+   "reelection": 0,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 2.748,
+   "throughput_mbps": 379.614,
+   "delay_ms": 34.102000000000004
+  },
+  "core_failFrac_0.10": {
+   "failed_isls": 200,
+   "isolated_sats": 43,
+   "isolated_portals": 43,
+   "reelection": 1,
+   "reconfig_done_s": 43.0,
+   "recovery_time_s": 3.5,
+   "loss_pct_run_avg": 4.223,
+   "throughput_mbps": 374.113,
+   "delay_ms": 34.296
+  }
+ }
+}
