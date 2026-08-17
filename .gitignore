@@ -116,3 +116,22 @@ test_stderr.txt
 
 # Draft files
 OriginOne.tex
+
+# IDE local config (not part of the published artifact)
+.trae/
+
+# Temporary debug scripts and outputs (not part of the reproducible pipeline)
+_*.py
+_*.txt
+_*.ps1
+_*.json
+_ppt_extract/
+_ppt_images/
+
+# Legacy ad-hoc analysis scripts (superseded)
+pytorchFileYSC_2_*.py
+pytorchFileYSC_2*.txt
+pytorchFileYSC_2analyze_images.py
+
+# Reference / submission PDFs (local only, too large for git)
+*.pdf
